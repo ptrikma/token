@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MTG Token & Card Finder</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #222; 
+            color: #fff; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        button { 
+            padding: 10px 15px; 
+            margin: 5px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            background-color: #5A2D82;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover { background-color: #733ba6; }
+        
+        /* --- SEARCH BAR STYLES --- */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        select#searchMode {
+            padding: 11px;
+            font-size: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 50%;
+            max-width: 300px;
+            margin: 0;
+        }
+
+        #status { 
+            margin: 20px 0; 
+            font-style: italic; 
+            color: #ccc;
+        }
+        .error { color: #ff5555 !important; font-weight: bold; }
+        
+        /* Main selected image */
+        #resultArea img { 
+            max-width: 300px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+        }
+        
+        .controls-box {
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative; 
+        }
+        
+        /* --- HEADER LINKS & DONATION BUTTON --- */
+        .header-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .rules-link {
+            color: #8ab4f8;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .rules-link:hover { text-decoration: underline; }
+        
+        .venmo-btn {
+            background-color: #008CFF;
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .venmo-btn:hover { background-color: #007bb5; }
+
+        /* --- SETTINGS MENU --- */
+        .options-container {
+            display: none; 
+            position: absolute;
+            bottom: 80px; 
+            right: 20px;
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+            z-index: 100;
+            border: 1px solid #444;
+            text-align: left;
+            width: max-content;
+            max-width: 300px;
+        }
+        .options-container.show { display: flex; }
+        .options-container label {
+            cursor: pointer;
+            font-size: 14px;
+            color: #eee;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+        .options-container select {
+            margin-top: 5px;
+            padding: 6px;
+            width: 100%;
+            background: #444;
+            color: white;
+            border: 1px solid #666;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* --- SEARCH FILTERS --- */
+        .filter-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        .filter-group label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- QUICK BUTTON THUMBNAILS (3x3 Grid) --- */
+        .quick-button-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+        }
+        .thumbnail-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: #ccc;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        .thumbnail-btn img {
+            width: 100%;
+            max-width: 120px;
+            aspect-ratio: 2.5 / 3.5; 
+            background-color: #333; 
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+            transition: box-shadow 0.2s ease, border 0.2s ease;
+            border: 2px solid transparent;
+            object-fit: cover;
+        }
+        .thumbnail-btn:hover {
+            transform: scale(1.08);
+            color: #fff;
+        }
+        .thumbnail-btn:hover img {
+            box-shadow: 0 6px 12px rgba(216, 27, 96, 0.8);
+            border: 2px solid #d81b60;
+        }
+        
+        .action-row { margin-top: 20px; }
+
+        /* --- RESULTS GALLERY GRID --- */
+        .results-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+        .results-grid img {
+            width: 140px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+        }
+        .results-grid img:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 12px rgba(0, 140, 255, 0.8);
+            border: 2px solid #008CFF;
+        }
+
+        /* --- EXACT 576px PRINT STYLES --- */
+        @media print {
+            @page { margin: 0; }
+            body { 
+                background-color: white; 
+                color: black; 
+                margin: 0;
+                padding: 0;
+                width: 576px; 
+            }
+            .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #backButtonContainer { 
+                display: none !important; 
+            }
+            #resultArea {
+                width: 576px;
+                margin: 0;
+                padding: 0;
+            }
+            #resultArea img { 
+                box-shadow: none !important; 
+                border: none !important; 
+                width: 576px !important; 
+                max-width: 576px !important; 
+                height: auto !important; 
+                display: block;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MTG Token & Card Finder</h1>
+    
+    <div class="header-links">
+        <a href="https://magic.wizards.com/en/rules" target="_blank" class="rules-link">MTG Rules</a>
+        <a href="https://venmo.com/u/momirapp" target="_blank" class="venmo-btn">Buy me a coffee</a>
+    </div>
+    
+    <div class="controls-box">
+        
+        <!-- Options Menu Dropdown -->
+        <div id="optionsMenu" class="options-container">
+            <label>
+                <input type="checkbox" id="autoPrintToggle"> 
+                <span><strong>Auto-Print:</strong> Opens print menu automatically when you click a final image</span>
+            </label>
+            <label>
+                <input type="checkbox" id="excludeArtToggle" checked> 
+                <span><strong>Exclude Art Cards:</strong> Hides full-art series cards from search results</span>
+            </label>
+            <label style="flex-direction: column; width: 100%;">
+                <span><strong>Version Preference:</strong></span>
+                <select id="printPrefToggle">
+                    <option value="newest">Newest Printing</option>
+                    <option value="earliest" selected>Earliest Printing (Default)</option>
+                    <option value="all">Show All Printings</option>
+                </select>
+            </label>
+        </div>
+
+        <!-- Search Bar Area with Name/Type Toggle -->
+        <div class="search-container">
+            <select id="searchMode">
+                <option value="name">Name</option>
+                <option value="type">Type</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="e.g., Black Lotus, Goblin...">
+            <button id="searchBtn" style="background-color: #d81b60; margin: 0;">Search</button>
+        </div>
+
+        <!-- Checkbox Filters -->
+        <div class="filter-group">
+            <label><input type="checkbox" id="checkCards" checked> Cards</label>
+            <label><input type="checkbox" id="checkTokens" checked> Tokens</label>
+            <label><input type="checkbox" id="checkEmblems" checked> Emblems</label>
+        </div>
+
+        <!-- Quick Access Thumbnail Buttons -->
+        <h3 style="font-size: 16px; margin-bottom: 10px;">Quick Tokens</h3>
+        <div class="quick-button-container">
+            <!-- Row 1: Artifact Tokens (Treasure, Clue, Food) -->
+            <button class="thumbnail-btn quick-btn" data-query='!"Treasure"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/a/3/a3a684b7-27e0-4d9e-a064-9e03c6e50c89.jpg" alt="Treasure">
+                <span>Treasure</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"Clue"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/9/b/9b111525-0600-4bae-94a3-df8f9472388f.jpg" alt="Clue">
+                <span>Clue</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"Food"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/2/6/261aed78-2d57-4ed4-b3d2-53b139b6bd44.jpg" alt="Food">
+                <span>Food</span>
+            </button>
+            
+            <!-- Row 2: Zombie, Soldier, Spirit -->
+            <button class="thumbnail-btn quick-btn" data-query='!"Zombie" c=b pow:2 tou:2 is:vanilla -o:decayed -o:lifelink -t:enchantment -t:artifact' data-force-token="true">
+                <img src="https://cards.scryfall.io/small/back/4/f/4f153ca0-0e55-4f3c-9780-570708844fd3.jpg" alt="2/2 Black Zombie">
+                <span>2/2 Black Zombie</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"Soldier" c=w pow:1 tou:1 is:vanilla -o:lifelink -o:first -o:vigilance -t:enchantment -t:artifact' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/8/6/86272c08-c5f2-413f-87ea-b135aca2d9c5.jpg" alt="1/1 White Soldier">
+                <span>1/1 White Soldier</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"Spirit" c=w pow:1 tou:1 o:flying -o:lifelink -o:defender -t:enchantment -t:artifact' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/5/9/59e79ba0-33c8-46c8-8694-8bf854345fe7.jpg" alt="1/1 White Spirit">
+                <span>1/1 White Spirit</span>
+            </button>
+
+            <!-- Row 3: Beast, Angel, Goblin -->
+            <button class="thumbnail-btn quick-btn" data-query='!"Beast" c=g pow:3 tou:3 is:vanilla -o:trample -o:infect -o:toxic -o:hexproof -t:enchantment -t:artifact' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/c/3/c3cbd01b-dbf5-424a-855d-f9a9d7e7e414.jpg" alt="3/3 Green Beast">
+                <span>3/3 Green Beast</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"Angel" c=w pow:4 tou:4 o:flying o:vigilance -o:lifelink -o:haste -t:enchantment -t:artifact' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/d/c/dc31e017-81e6-43bf-bf8e-ea0faca5d9b7.jpg" alt="4/4 White Angel">
+                <span>4/4 White Angel</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"Goblin" c=r pow:1 tou:1 is:vanilla -o:haste -o:defender -o:menace -t:enchantment -t:artifact' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/e/9/e9577d3c-ee19-4b53-adac-b304287a066f.jpg" alt="1/1 Red Goblin">
+                <span>1/1 Red Goblin</span>
+            </button>
+        </div>
+
+        <!-- Action Row -->
+        <div class="action-row">
+            <button id="printBtn" style="background-color: #2e7d32;">Print Selected Image</button>
+            <button id="hamburgerBtn" style="background-color: #444;" title="Settings">☰ Settings</button>
+        </div>
+
+    </div>
+
+    <h3 id="status">Ready. Search for a card or click a button.</h3>
+    
+    <!-- Go Back Feature Container -->
+    <div id="backButtonContainer" style="display: none; margin: 15px 0;">
+        <button id="backToResultsBtn" style="background-color: #444; font-weight: bold; padding: 12px 20px;">← Back to Results</button>
+    </div>
+
+    <!-- Gallery for search results -->
+    <div id="resultsGrid" class="results-grid"></div>
+    
+    <!-- Main area for the clicked/selected card -->
+    <div id="resultArea"></div>
+
+    <script>
+        // Memory variables to preserve search state
+        let savedStatusMessage = "";
+
+        // --- Settings Menu Logic ---
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const optionsMenu = document.getElementById('optionsMenu');
+
+        hamburgerBtn.addEventListener('click', function(e) {
+            optionsMenu.classList.toggle('show');
+            e.stopPropagation(); 
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!optionsMenu.contains(e.target) && e.target !== hamburgerBtn) {
+                optionsMenu.classList.remove('show');
+            }
+        });
+
+        // --- Core Fetching Logic ---
+        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false) {
+            const statusText = document.getElementById('status');
+            const resultsGrid = document.getElementById('resultsGrid');
+            const resultArea = document.getElementById('resultArea');
+            const backContainer = document.getElementById('backButtonContainer');
+            
+            if (!baseQuery.trim()) {
+                statusText.innerText = "Please enter a search term.";
+                statusText.className = "error";
+                return;
+            }
+
+            statusText.innerText = "Searching...";
+            statusText.className = "";
+            resultsGrid.innerHTML = "";
+            resultArea.innerHTML = "";
+            resultsGrid.style.display = "flex";
+            backContainer.style.display = "none";
+
+            try {
+                let typeFilters = [];
+                
+                if (forceToken) {
+                    typeFilters.push("t:token");
+                } else if (forceEmblem) {
+                    typeFilters.push("t:emblem");
+                } else {
+                    if (document.getElementById('checkCards').checked) typeFilters.push("(-t:token -t:emblem)");
+                    if (document.getElementById('checkTokens').checked) typeFilters.push("t:token");
+                    if (document.getElementById('checkEmblems').checked) typeFilters.push("t:emblem");
+                }
+
+                if (typeFilters.length === 0) {
+                    statusText.innerText = "Please select at least one type (Cards, Tokens, or Emblems).";
+                    statusText.className = "error";
+                    return;
+                }
+
+                let finalQuery = `${baseQuery} (${typeFilters.join(" or ")})`;
+                
+                const excludeArt = document.getElementById('excludeArtToggle').checked;
+                if (excludeArt) {
+                    finalQuery += " -layout:art_series";
+                }
+
+                const printPref = document.getElementById('printPrefToggle').value;
+                if (printPref === 'earliest') {
+                    finalQuery += " -is:reprint"; 
+                }
+
+                let url = `https://api.scryfall.com/cards/search?include_extras=true&q=${encodeURIComponent(finalQuery)}`;
+                if (printPref === 'all') {
+                    url += "&unique=prints";
+                }
+                
+                const cleanKeyword = baseQuery.replace(/[a-zA-Z\-]+[=:][^\s]+/g, '').replace(/[!"]/g, '').trim().toLowerCase();
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.object === 'error' || data.total_cards === 0) {
+                    statusText.innerText = "No results found. Try adjusting your search or filters.";
+                    statusText.className = "error";
+                    return;
+                }
+
+                savedStatusMessage = `Found ${data.data.length} results. Click one to select it!`;
+                statusText.innerText = savedStatusMessage;
+                
+                const renderThumbnail = (thumbUrl, highResUrl, faceName) => {
+                    if (thumbUrl !== "") {
+                        const img = document.createElement('img');
+                        img.src = thumbUrl;
+                        img.alt = faceName;
+                        img.title = faceName;
+                        
+                        img.onclick = () => {
+                            selectMainCard(highResUrl, faceName);
+                        };
+                        
+                        resultsGrid.appendChild(img);
+                    }
+                };
+
+                // Smart Face/Card Rendering for DFCs
+                data.data.forEach(card => {
+                    if (card.image_uris && card.image_uris.small) {
+                        renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name);
+                    } 
+                    else if (card.card_faces) {
+                        let matchedFaces = [];
+
+                        card.card_faces.forEach(face => {
+                            if (!face.image_uris || !face.image_uris.small) return;
+                            
+                            if (cleanKeyword !== "") {
+                                const faceText = [
+                                    (face.name || "").toLowerCase(),
+                                    (face.type_line || "").toLowerCase(),
+                                    (face.oracle_text || "").toLowerCase()
+                                ].join(" ");
+                                
+                                if (faceText.includes(cleanKeyword)) {
+                                    matchedFaces.push(face);
+                                } else {
+                                    const words = cleanKeyword.split(" ");
+                                    if (words.some(w => w.length > 2 && faceText.includes(w))) {
+                                        matchedFaces.push(face);
+                                    }
+                                }
+                            } else {
+                                matchedFaces.push(face);
+                            }
+                        });
+
+                        if (matchedFaces.length === 0) {
+                            matchedFaces = card.card_faces.filter(f => f.image_uris && f.image_uris.small);
+                        }
+
+                        matchedFaces.forEach(face => {
+                            renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name);
+                        });
+                    }
+                });
+
+            } catch (error) {
+                statusText.innerText = "System Error: " + error.message;
+                statusText.className = "error";
+            }
+        }
+
+        // --- Render Main Selection ---
+        function selectMainCard(imgUrl, cardName) {
+            const statusText = document.getElementById('status');
+            const resultArea = document.getElementById('resultArea');
+            const resultsGrid = document.getElementById('resultsGrid');
+            const backContainer = document.getElementById('backButtonContainer');
+            
+            resultsGrid.style.display = "none";
+            backContainer.style.display = "block";
+            resultArea.innerHTML = "";
+            statusText.innerText = "Selected: " + cardName;
+
+            const imgElement = document.createElement('img');
+            imgElement.src = imgUrl;
+            imgElement.alt = cardName;
+
+            imgElement.onload = function() {
+                const isAutoPrint = document.getElementById('autoPrintToggle').checked;
+                if (isAutoPrint) {
+                    setTimeout(function() {
+                        window.print();
+                    }, 100);
+                }
+            };
+
+            resultArea.appendChild(imgElement);
+        }
+
+        // --- Manual Search Handler (Name vs Type) ---
+        function processManualSearch() {
+            let query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            const mode = document.getElementById('searchMode').value;
+            
+            if (mode === 'type') {
+                query = `t:"${query}"`; 
+            }
+            
+            fetchCards(query);
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('searchBtn').addEventListener('click', processManualSearch);
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processManualSearch();
+            }
+        });
+
+        const quickBtns = document.querySelectorAll('.quick-btn');
+        quickBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const query = this.getAttribute('data-query');
+                const forceToken = this.getAttribute('data-force-token') === 'true';
+                const forceEmblem = this.getAttribute('data-force-emblem') === 'true';
+                
+                const cleanDisplay = query.match(/!"([^"]+)"/);
+                document.getElementById('searchInput').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
+                
+                fetchCards(query, forceToken, forceEmblem);
+            });
+        });
+
+        document.getElementById('backToResultsBtn').addEventListener('click', function() {
+            document.getElementById('resultsGrid').style.display = "flex";
+            document.getElementById('backButtonContainer').style.display = "none";
+            document.getElementById('resultArea').innerHTML = "";
+            document.getElementById('status').innerText = savedStatusMessage;
+        });
+
+        document.getElementById('printBtn').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>
