@@ -26,7 +26,7 @@
         }
         button:hover { background-color: #733ba6; }
         
-        /* --- SEARCH BAR STYLES (UPDATED FOR 3 BOXES) --- */
+        /* --- SEARCH BAR STYLES (3 BOXES & BUTTONS) --- */
         .search-container {
             display: flex;
             flex-direction: column;
@@ -51,13 +51,30 @@
             background-color: #fff;
             color: #000;
         }
-        #searchBtn {
-            background-color: #d81b60;
+        .search-buttons {
+            display: flex;
+            gap: 10px;
             width: 50%;
             min-width: 250px;
-            padding: 15px;
+            justify-content: center;
+        }
+        .search-buttons button {
+            flex: 1;
             margin: 0;
+            padding: 15px;
             font-size: 16px;
+        }
+        #searchBtn {
+            background-color: #d81b60;
+        }
+        #searchBtn:hover {
+            background-color: #e91e63;
+        }
+        #clearBtn {
+            background-color: #555;
+        }
+        #clearBtn:hover {
+            background-color: #777;
         }
 
         #status { 
@@ -69,11 +86,23 @@
         .error { color: #ff5555 !important; font-weight: bold; }
         
         /* Main selected image */
-        #resultArea img { 
+        .main-card-img { 
             width: 100%;
             max-width: 350px; 
             border-radius: 14px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+            margin-bottom: 20px;
+        }
+
+        /* --- RELATED TOKENS SECTION --- */
+        .related-tokens-section {
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .controls-box {
@@ -229,24 +258,28 @@
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            transition: transform 0.2s ease;
+        }
+        .results-grid img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 140, 255, 0.8);
         }
 
         /* =========================================
-           MOBILE SPECIFIC MEDIA QUERIES (PHONES & TABLETS)
+           MOBILE SPECIFIC MEDIA QUERIES
            ========================================= */
         @media (max-width: 600px) {
             .controls-box {
                 padding: 15px;
             }
-            /* Stack search inputs vertically on mobile */
             .search-inputs {
                 flex-direction: column;
             }
             .search-inputs input {
                 width: 100%;
             }
-            #searchBtn {
-                width: 100%;
+            .search-buttons {
+                width: 100%; /* Keep Search and Clear side-by-side on mobile, but full width */
             }
             .quick-button-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -278,12 +311,16 @@
             .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #backButtonContainer { 
                 display: none !important; 
             }
+            /* Hide the related tokens grid during print */
+            .related-tokens-section {
+                display: none !important;
+            }
             #resultArea {
                 width: 576px;
                 margin: 0;
                 padding: 0;
             }
-            #resultArea img { 
+            #resultArea img.main-card-img { 
                 box-shadow: none !important; 
                 border: none !important; 
                 width: 576px !important; 
@@ -348,14 +385,17 @@
             </label>
         </div>
 
-        <!-- NEW 3-BOX SEARCH AREA -->
+        <!-- 3-BOX SEARCH AREA -->
         <div class="search-container">
             <div class="search-inputs">
                 <input type="text" id="searchName" placeholder="Card Name (e.g. Goblin)">
                 <input type="text" id="searchType" placeholder="Type (e.g. Artifact)">
                 <input type="text" id="searchText" placeholder="Text (e.g. deathtouch)">
             </div>
-            <button id="searchBtn">Search</button>
+            <div class="search-buttons">
+                <button id="searchBtn">Search</button>
+                <button id="clearBtn">Clear</button>
+            </div>
         </div>
 
         <!-- Checkbox Filters -->
@@ -440,7 +480,7 @@
         });
 
         // --- Core Fetching Logic ---
-        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false) {
+        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false, overrideDuplicate = null, overrideMax = null) {
             const statusText = document.getElementById('status');
             const resultsGrid = document.getElementById('resultsGrid');
             const resultArea = document.getElementById('resultArea');
@@ -485,14 +525,13 @@
                     finalQuery += " -layout:art_series -layout:ad -is:artseries -is:memorabilia -t:card";
                 }
 
-                const duplicateFilter = document.getElementById('duplicateToggle').value;
+                const duplicateFilter = overrideDuplicate || document.getElementById('duplicateToggle').value;
+                const maxResultsLimit = overrideMax || document.getElementById('maxResultsToggle').value;
                 const sortOrder = document.getElementById('sortToggle').value;
-                const maxResultsLimit = document.getElementById('maxResultsToggle').value;
                 
                 let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
                 url += `&order=released&dir=${sortOrder}`;
 
-                // Clean the inputs to figure out what word to match against card faces
                 const searchNameVal = document.getElementById('searchName').value.trim().toLowerCase();
                 const searchTypeVal = document.getElementById('searchType').value.trim().toLowerCase();
                 const cleanKeyword = (searchNameVal + " " + searchTypeVal).trim();
@@ -506,7 +545,7 @@
                     return;
                 }
 
-                const renderThumbnail = (thumbUrl, highResUrl, faceName) => {
+                const renderThumbnail = (thumbUrl, highResUrl, faceName, fullCardObj) => {
                     if (thumbUrl !== "") {
                         const img = document.createElement('img');
                         img.src = thumbUrl;
@@ -516,7 +555,7 @@
                         img.dataset.name = faceName;
                         
                         img.onclick = () => {
-                            selectMainCard(highResUrl, faceName);
+                            selectMainCard(highResUrl, faceName, false, fullCardObj);
                         };
                         
                         resultsGrid.appendChild(img);
@@ -525,7 +564,6 @@
 
                 let renderedCount = 0;
 
-                // Smart Face/Card Rendering for DFCs & Backsides
                 for (const card of data.data) {
                     if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
 
@@ -535,7 +573,7 @@
                     }
 
                     if (card.image_uris && card.image_uris.small) {
-                        renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name);
+                        renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name, card);
                         renderedCount++;
                     } 
                     else if (card.card_faces) {
@@ -582,7 +620,7 @@
 
                         for (const face of matchedFaces) {
                             if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
-                            renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name);
+                            renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name, card);
                             renderedCount++;
                         }
                     }
@@ -601,8 +639,8 @@
             }
         }
 
-        // --- Render Main Selection ---
-        function selectMainCard(imgUrl, cardName, forcePrint = false) {
+        // --- Render Main Selection & Check For Related Tokens ---
+        function selectMainCard(imgUrl, cardName, forcePrint = false, cardObj = null) {
             const statusText = document.getElementById('status');
             const resultArea = document.getElementById('resultArea');
             const resultsGrid = document.getElementById('resultsGrid');
@@ -614,6 +652,7 @@
             statusText.innerText = "Selected: " + cardName;
 
             const imgElement = document.createElement('img');
+            imgElement.className = "main-card-img";
             imgElement.src = imgUrl;
             imgElement.alt = cardName;
 
@@ -631,9 +670,95 @@
             };
 
             resultArea.appendChild(imgElement);
+
+            // --- RELATED TOKENS LOGIC ---
+            if (cardObj && cardObj.all_parts && cardObj.all_parts.length > 0) {
+                const tokenParts = cardObj.all_parts.filter(p => p.component === 'token' || p.component === 'emblem');
+                
+                if (tokenParts.length > 0) {
+                    const tokensSection = document.createElement('div');
+                    tokensSection.className = 'related-tokens-section';
+                    
+                    const headerContainer = document.createElement('div');
+                    headerContainer.style.display = 'flex';
+                    headerContainer.style.justifyContent = 'center';
+                    headerContainer.style.alignItems = 'center';
+                    headerContainer.style.gap = '15px';
+                    headerContainer.style.marginBottom = '20px';
+                    headerContainer.style.flexWrap = 'wrap';
+
+                    const cardTypeLine = (cardObj.type_line || "").toLowerCase();
+                    const isAlreadyToken = cardTypeLine.includes('token') || cardTypeLine.includes('emblem');
+
+                    const tokensHeader = document.createElement('h4');
+                    tokensHeader.innerText = isAlreadyToken ? "Related Tokens:" : "Tokens created by this card:";
+                    tokensHeader.style.margin = '0';
+                    tokensHeader.style.color = '#aaa';
+                    
+                    const showAllBtn = document.createElement('button');
+                    showAllBtn.innerText = "Find All Printings";
+                    showAllBtn.style.padding = '8px 16px';
+                    showAllBtn.style.fontSize = '13px';
+                    showAllBtn.style.backgroundColor = '#008CFF';
+                    showAllBtn.style.margin = '0';
+                    showAllBtn.style.display = 'none'; 
+
+                    headerContainer.appendChild(tokensHeader);
+                    headerContainer.appendChild(showAllBtn);
+                    tokensSection.appendChild(headerContainer);
+                    
+                    const tokensGrid = document.createElement('div');
+                    tokensGrid.className = 'results-grid'; 
+                    tokensSection.appendChild(tokensGrid);
+                    
+                    resultArea.appendChild(tokensSection);
+                    
+                    Promise.all(tokenParts.map(p => fetch(p.uri).then(res => res.json())))
+                        .then(tokensData => {
+                            let oracleIds = [];
+                            let tokenNames = [];
+                            
+                            tokensData.forEach(tokenData => {
+                                if (tokenData.oracle_id) oracleIds.push(tokenData.oracle_id);
+                                if (tokenData.name) tokenNames.push(tokenData.name);
+                                
+                                const tImgSmall = tokenData.image_uris?.small || tokenData.card_faces?.[0].image_uris?.small;
+                                const tImgNormal = tokenData.image_uris?.normal || tokenData.card_faces?.[0].image_uris?.normal;
+                                
+                                if (tImgSmall) {
+                                    const tImg = document.createElement('img');
+                                    tImg.src = tImgSmall;
+                                    tImg.title = tokenData.name;
+                                    tImg.dataset.highres = tImgNormal;
+                                    tImg.dataset.name = tokenData.name;
+                                    
+                                    tImg.onclick = () => {
+                                        selectMainCard(tImgNormal, tokenData.name, false, tokenData);
+                                    };
+                                    
+                                    tokensGrid.appendChild(tImg);
+                                }
+                            });
+
+                            if (oracleIds.length > 0) {
+                                showAllBtn.style.display = 'inline-block';
+                                
+                                showAllBtn.onclick = () => {
+                                    document.getElementById('searchName').value = tokenNames.join(" or ");
+                                    document.getElementById('searchType').value = "";
+                                    document.getElementById('searchText').value = "";
+                                    
+                                    const exactQuery = oracleIds.map(id => `oracle_id:${id}`).join(" or ");
+                                    fetchCards(exactQuery, false, false, 'prints', 'all');
+                                };
+                            }
+                        })
+                        .catch(e => console.error("Could not fetch related token data", e));
+                }
+            }
         }
 
-        // --- Manual Search Handler for 3 Boxes ---
+        // --- Manual Search Handler ---
         function processManualSearch() {
             let nameVal = document.getElementById('searchName').value.trim();
             let typeVal = document.getElementById('searchType').value.trim();
@@ -644,11 +769,9 @@
             let queryParts = [];
 
             if (nameVal) {
-                // If they used advanced syntax (like c:b) in the Name box, just pass it raw
                 if (nameVal.includes(':') || nameVal.includes('=')) {
                     queryParts.push(nameVal);
                 } else {
-                    // Otherwise, safely wrap it in name:"" so Aang doesn't return Angels
                     queryParts.push(`name:"${nameVal}"`);
                 }
             }
@@ -665,8 +788,15 @@
 
         // --- Event Listeners ---
         document.getElementById('searchBtn').addEventListener('click', processManualSearch);
+        
+        // Clear Button logic
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            document.getElementById('searchName').value = "";
+            document.getElementById('searchType').value = "";
+            document.getElementById('searchText').value = "";
+            document.getElementById('searchName').focus();
+        });
 
-        // Allow pressing Enter in ANY of the three search boxes to trigger the search
         ['searchName', 'searchType', 'searchText'].forEach(id => {
             document.getElementById(id).addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -682,7 +812,6 @@
                 const forceToken = this.getAttribute('data-force-token') === 'true';
                 const forceEmblem = this.getAttribute('data-force-emblem') === 'true';
                 
-                // Set the Name box to the friendly token name and clear the others
                 const cleanDisplay = query.match(/!"([^"]+)"/);
                 document.getElementById('searchName').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
                 document.getElementById('searchType').value = "";
@@ -704,7 +833,7 @@
         });
 
         document.getElementById('printBtn').addEventListener('click', function() {
-            const selectedImg = document.querySelector('#resultArea img');
+            const selectedImg = document.querySelector('#resultArea img.main-card-img');
             
             if (selectedImg) {
                 window.print();
