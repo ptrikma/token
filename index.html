@@ -260,17 +260,9 @@
                 margin: 0;
                 padding: 15px;
             }
-            /* Center the settings menu on mobile */
+            /* Move options container up slightly since buttons are stacked */
             .options-container {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                bottom: auto;
-                right: auto;
-                width: 90%;
-                max-width: 400px;
-                z-index: 1000;
+                bottom: 140px;
             }
         }
 
@@ -467,6 +459,11 @@
             resultArea.innerHTML = "";
             resultsGrid.style.display = "flex";
             backContainer.style.display = "none";
+
+            // Smoothly auto-scroll down to the results area on mobile
+            if (window.innerWidth <= 600) {
+                statusText.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
 
             try {
                 let typeFilters = [];
