@@ -110,7 +110,7 @@
             border-radius: 5px;
             flex-direction: column;
             align-items: flex-start;
-            gap: 15px;
+            gap: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.8);
             z-index: 100;
             border: 1px solid #444;
@@ -265,23 +265,45 @@
         <div id="optionsMenu" class="options-container">
             <label>
                 <input type="checkbox" id="autoPrintToggle"> 
-                <span><strong>Auto-Print:</strong> Opens print menu automatically when you click a final image</span>
+                <span><strong>Auto-Print:</strong> Opens print menu automatically when you click an image</span>
             </label>
             <label>
                 <input type="checkbox" id="excludeArtToggle" checked> 
-                <span><strong>Exclude Art Cards:</strong> Hides full-art series cards from search results</span>
+                <span><strong>Exclude Art Cards:</strong> Hides full-art ad inserts from search results</span>
             </label>
+            
+            <hr style="width: 100%; border-color: #444; margin: 5px 0;">
+
             <label style="flex-direction: column; width: 100%;">
-                <span><strong>Version Preference:</strong></span>
-                <select id="printPrefToggle">
-                    <option value="newest">Newest Printing</option>
-                    <option value="earliest" selected>Earliest Printing (Default)</option>
-                    <option value="all">Show All Printings</option>
+                <span><strong>Search Depth (Speed):</strong></span>
+                <select id="duplicateToggle">
+                    <option value="art" selected>Unique Artworks (Fast - Default)</option>
+                    <option value="prints">Every Printing (Slower)</option>
+                    <option value="cards">Unique Card Names (Fastest)</option>
+                </select>
+            </label>
+
+            <label style="flex-direction: column; width: 100%;">
+                <span><strong>Sort By:</strong></span>
+                <select id="sortToggle">
+                    <option value="asc" selected>Oldest First (Default)</option>
+                    <option value="desc">Newest First</option>
+                </select>
+            </label>
+
+            <label style="flex-direction: column; width: 100%;">
+                <span><strong>Max Results Displayed:</strong></span>
+                <select id="maxResultsToggle">
+                    <option value="1">1 Result</option>
+                    <option value="5" selected>5 Results (Default)</option>
+                    <option value="10">10 Results</option>
+                    <option value="20">20 Results</option>
+                    <option value="all">Show All Found</option>
                 </select>
             </label>
         </div>
 
-        <!-- Search Bar Area with Name/Type Toggle -->
+        <!-- Search Bar Area -->
         <div class="search-container">
             <select id="searchMode">
                 <option value="name">Name</option>
@@ -301,7 +323,6 @@
         <!-- Quick Access Thumbnail Buttons -->
         <h3 style="font-size: 16px; margin-bottom: 10px;">Quick Tokens</h3>
         <div class="quick-button-container">
-            <!-- Row 1: Artifact Tokens (Treasure, Clue, Food) -->
             <button class="thumbnail-btn quick-btn" data-query='!"Treasure"' data-force-token="true">
                 <img src="https://cards.scryfall.io/normal/front/a/3/a3a684b7-27e0-4d9e-a064-9e03c6e50c89.jpg" alt="Treasure">
                 <span>Treasure</span>
@@ -314,8 +335,6 @@
                 <img src="https://cards.scryfall.io/normal/front/2/6/261aed78-2d57-4ed4-b3d2-53b139b6bd44.jpg" alt="Food">
                 <span>Food</span>
             </button>
-            
-            <!-- Row 2: Zombie, Soldier, Spirit -->
             <button class="thumbnail-btn quick-btn" data-query='!"Zombie" c=b pow:2 tou:2 is:vanilla -o:decayed -o:lifelink -t:enchantment -t:artifact' data-force-token="true">
                 <img src="https://cards.scryfall.io/small/back/4/f/4f153ca0-0e55-4f3c-9780-570708844fd3.jpg" alt="2/2 Black Zombie">
                 <span>2/2 Black Zombie</span>
@@ -328,8 +347,6 @@
                 <img src="https://cards.scryfall.io/normal/front/5/9/59e79ba0-33c8-46c8-8694-8bf854345fe7.jpg" alt="1/1 White Spirit">
                 <span>1/1 White Spirit</span>
             </button>
-
-            <!-- Row 3: Beast, Angel, Goblin -->
             <button class="thumbnail-btn quick-btn" data-query='!"Beast" c=g pow:3 tou:3 is:vanilla -o:trample -o:infect -o:toxic -o:hexproof -t:enchantment -t:artifact' data-force-token="true">
                 <img src="https://cards.scryfall.io/normal/front/c/3/c3cbd01b-dbf5-424a-855d-f9a9d7e7e414.jpg" alt="3/3 Green Beast">
                 <span>3/3 Green Beast</span>
@@ -344,29 +361,22 @@
             </button>
         </div>
 
-        <!-- Action Row -->
         <div class="action-row">
             <button id="printBtn" style="background-color: #2e7d32;">Print Selected Image</button>
             <button id="hamburgerBtn" style="background-color: #444;" title="Settings">☰ Settings</button>
         </div>
-
     </div>
 
     <h3 id="status">Ready. Search for a card or click a button.</h3>
     
-    <!-- Go Back Feature Container -->
     <div id="backButtonContainer" style="display: none; margin: 15px 0;">
         <button id="backToResultsBtn" style="background-color: #444; font-weight: bold; padding: 12px 20px;">← Back to Results</button>
     </div>
 
-    <!-- Gallery for search results -->
     <div id="resultsGrid" class="results-grid"></div>
-    
-    <!-- Main area for the clicked/selected card -->
     <div id="resultArea"></div>
 
     <script>
-        // Memory variables to preserve search state
         let savedStatusMessage = "";
 
         // --- Settings Menu Logic ---
@@ -397,7 +407,7 @@
                 return;
             }
 
-            statusText.innerText = "Searching...";
+            statusText.innerText = "Searching... (This takes longer if set to 'Every Printing')";
             statusText.className = "";
             resultsGrid.innerHTML = "";
             resultArea.innerHTML = "";
@@ -427,19 +437,19 @@
                 
                 const excludeArt = document.getElementById('excludeArtToggle').checked;
                 if (excludeArt) {
-                    finalQuery += " -layout:art_series";
+                    finalQuery += " -layout:art_series -layout:ad -is:artseries -is:memorabilia -t:card";
                 }
 
-                const printPref = document.getElementById('printPrefToggle').value;
-                if (printPref === 'earliest') {
-                    finalQuery += " -is:reprint"; 
-                }
-
-                let url = `https://api.scryfall.com/cards/search?include_extras=true&q=${encodeURIComponent(finalQuery)}`;
-                if (printPref === 'all') {
-                    url += "&unique=prints";
-                }
+                const duplicateFilter = document.getElementById('duplicateToggle').value;
+                const sortOrder = document.getElementById('sortToggle').value;
+                const maxResultsLimit = document.getElementById('maxResultsToggle').value;
                 
+                // Construct optimized URL
+                let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
+                
+                // Add the sort order instruction
+                url += `&order=released&dir=${sortOrder}`;
+
                 const cleanKeyword = baseQuery.replace(/[a-zA-Z\-]+[=:][^\s]+/g, '').replace(/[!"]/g, '').trim().toLowerCase();
                 
                 const response = await fetch(url);
@@ -451,9 +461,6 @@
                     return;
                 }
 
-                savedStatusMessage = `Found ${data.data.length} results. Click one to select it!`;
-                statusText.innerText = savedStatusMessage;
-                
                 const renderThumbnail = (thumbUrl, highResUrl, faceName) => {
                     if (thumbUrl !== "") {
                         const img = document.createElement('img');
@@ -469,16 +476,32 @@
                     }
                 };
 
-                // Smart Face/Card Rendering for DFCs
-                data.data.forEach(card => {
+                // Track and enforce user-selected limit
+                let renderedCount = 0;
+
+                // Smart Face/Card Rendering for DFCs & Backsides
+                for (const card of data.data) {
+                    if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
+
+                    if (excludeArt) {
+                        const ctl = (card.type_line || "").toLowerCase();
+                        if (ctl === "card" || ctl === "ad" || ctl.includes("art series")) continue;
+                    }
+
                     if (card.image_uris && card.image_uris.small) {
                         renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name);
+                        renderedCount++;
                     } 
                     else if (card.card_faces) {
                         let matchedFaces = [];
 
                         card.card_faces.forEach(face => {
                             if (!face.image_uris || !face.image_uris.small) return;
+                            
+                            if (excludeArt) {
+                                const ftl = (face.type_line || "").toLowerCase().trim();
+                                if (ftl === "card" || ftl === "ad" || ftl.includes("art series") || ftl === "") return;
+                            }
                             
                             if (cleanKeyword !== "") {
                                 const faceText = [
@@ -501,14 +524,26 @@
                         });
 
                         if (matchedFaces.length === 0) {
-                            matchedFaces = card.card_faces.filter(f => f.image_uris && f.image_uris.small);
+                            matchedFaces = card.card_faces.filter(f => {
+                                if (!f.image_uris || !f.image_uris.small) return false;
+                                if (excludeArt) {
+                                    const ftl = (f.type_line || "").toLowerCase().trim();
+                                    if (ftl === "card" || ftl === "ad" || ftl.includes("art series") || ftl === "") return false;
+                                }
+                                return true;
+                            });
                         }
 
-                        matchedFaces.forEach(face => {
+                        for (const face of matchedFaces) {
+                            if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
                             renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name);
-                        });
+                            renderedCount++;
+                        }
                     }
-                });
+                }
+
+                savedStatusMessage = `Showing ${renderedCount} results. Click one to select it!`;
+                statusText.innerText = savedStatusMessage;
 
             } catch (error) {
                 statusText.innerText = "System Error: " + error.message;
