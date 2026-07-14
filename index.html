@@ -26,34 +26,38 @@
         }
         button:hover { background-color: #733ba6; }
         
-        /* --- SEARCH BAR STYLES --- */
+        /* --- SEARCH BAR STYLES (UPDATED FOR 3 BOXES) --- */
         .search-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .search-inputs {
+            display: flex;
             gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
         }
-        select#searchMode {
+        .search-inputs input {
+            flex: 1;
             padding: 13px;
-            font-size: 16px;
+            font-size: 16px; /* Prevents iOS auto-zooming */
             border-radius: 5px;
             border: 1px solid #ccc;
-            background-color: #333;
-            color: white;
-            cursor: pointer;
-        }
-        input[type="text"] {
-            padding: 13px;
-            font-size: 16px; 
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            flex-grow: 1;
-            min-width: 200px;
-            max-width: 400px;
-            margin: 0;
             box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+        }
+        #searchBtn {
+            background-color: #d81b60;
+            width: 50%;
+            min-width: 250px;
+            padding: 15px;
+            margin: 0;
+            font-size: 16px;
         }
 
         #status { 
@@ -234,17 +238,15 @@
             .controls-box {
                 padding: 15px;
             }
-            .search-container {
+            /* Stack search inputs vertically on mobile */
+            .search-inputs {
                 flex-direction: column;
-                align-items: stretch;
             }
-            .search-container > * {
+            .search-inputs input {
                 width: 100%;
-                max-width: 100%;
-                margin-bottom: 5px;
             }
             #searchBtn {
-                padding: 15px;
+                width: 100%;
             }
             .quick-button-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -346,14 +348,14 @@
             </label>
         </div>
 
-        <!-- Search Bar Area -->
+        <!-- NEW 3-BOX SEARCH AREA -->
         <div class="search-container">
-            <select id="searchMode">
-                <option value="name">Name</option>
-                <option value="type">Type</option>
-            </select>
-            <input type="text" id="searchInput" placeholder="e.g., Black Lotus, Goblin...">
-            <button id="searchBtn" style="background-color: #d81b60;">Search</button>
+            <div class="search-inputs">
+                <input type="text" id="searchName" placeholder="Card Name (e.g. Goblin)">
+                <input type="text" id="searchType" placeholder="Type (e.g. Artifact)">
+                <input type="text" id="searchText" placeholder="Text (e.g. deathtouch)">
+            </div>
+            <button id="searchBtn">Search</button>
         </div>
 
         <!-- Checkbox Filters -->
@@ -490,19 +492,16 @@
                 let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
                 url += `&order=released&dir=${sortOrder}`;
 
-                // Upgraded cleanup strictly ignores syntax tags so we don't break the Face-matcher
-                const cleanKeyword = baseQuery
-                    .replace(/name:/gi, '')
-                    .replace(/t:/gi, '')
-                    .replace(/[a-zA-Z\-]+[=:][^\s"]+/g, '')
-                    .replace(/[!"]/g, '')
-                    .trim().toLowerCase();
+                // Clean the inputs to figure out what word to match against card faces
+                const searchNameVal = document.getElementById('searchName').value.trim().toLowerCase();
+                const searchTypeVal = document.getElementById('searchType').value.trim().toLowerCase();
+                const cleanKeyword = (searchNameVal + " " + searchTypeVal).trim();
                 
                 const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.object === 'error' || data.total_cards === 0) {
-                    statusText.innerText = "No results found. Try adjusting your search or spelling.";
+                    statusText.innerText = "No results found. Try adjusting your search or filters.";
                     statusText.className = "error";
                     return;
                 }
@@ -557,7 +556,7 @@
                                     (face.oracle_text || "").toLowerCase()
                                 ].join(" ");
                                 
-                                if (faceText.includes(cleanKeyword)) {
+                                if (faceText.includes(cleanKeyword) || cleanKeyword.includes(face.name.toLowerCase())) {
                                     matchedFaces.push(face);
                                 } else {
                                     const words = cleanKeyword.split(" ");
@@ -634,33 +633,46 @@
             resultArea.appendChild(imgElement);
         }
 
-        // --- Manual Search Handler with Smart Strict Mode ---
+        // --- Manual Search Handler for 3 Boxes ---
         function processManualSearch() {
-            let query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
-
-            const mode = document.getElementById('searchMode').value;
+            let nameVal = document.getElementById('searchName').value.trim();
+            let typeVal = document.getElementById('searchType').value.trim();
+            let textVal = document.getElementById('searchText').value.trim();
             
-            // If the user types a normal word/phrase without advanced Scryfall syntax, wrap it strictly
-            if (!query.includes(':') && !query.includes('=') && !query.includes('"')) {
-                if (mode === 'name') {
-                    // This forces Scryfall to ONLY search the title of the card, ignoring Oracle text.
-                    query = `name:"${query}"`; 
-                } else if (mode === 'type') {
-                    query = `t:"${query}"`; 
+            if (!nameVal && !typeVal && !textVal) return;
+
+            let queryParts = [];
+
+            if (nameVal) {
+                // If they used advanced syntax (like c:b) in the Name box, just pass it raw
+                if (nameVal.includes(':') || nameVal.includes('=')) {
+                    queryParts.push(nameVal);
+                } else {
+                    // Otherwise, safely wrap it in name:"" so Aang doesn't return Angels
+                    queryParts.push(`name:"${nameVal}"`);
                 }
             }
-            
-            fetchCards(query);
+            if (typeVal) {
+                queryParts.push(`t:"${typeVal}"`);
+            }
+            if (textVal) {
+                queryParts.push(`o:"${textVal}"`);
+            }
+
+            let finalQuery = queryParts.join(" ");
+            fetchCards(finalQuery);
         }
 
         // --- Event Listeners ---
         document.getElementById('searchBtn').addEventListener('click', processManualSearch);
 
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                processManualSearch();
-            }
+        // Allow pressing Enter in ANY of the three search boxes to trigger the search
+        ['searchName', 'searchType', 'searchText'].forEach(id => {
+            document.getElementById(id).addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    processManualSearch();
+                }
+            });
         });
 
         const quickBtns = document.querySelectorAll('.quick-btn');
@@ -670,8 +682,11 @@
                 const forceToken = this.getAttribute('data-force-token') === 'true';
                 const forceEmblem = this.getAttribute('data-force-emblem') === 'true';
                 
+                // Set the Name box to the friendly token name and clear the others
                 const cleanDisplay = query.match(/!"([^"]+)"/);
-                document.getElementById('searchInput').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
+                document.getElementById('searchName').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
+                document.getElementById('searchType').value = "";
+                document.getElementById('searchText').value = "";
                 
                 fetchCards(query, forceToken, forceEmblem);
             });
