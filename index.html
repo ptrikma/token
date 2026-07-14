@@ -2,23 +2,27 @@
 <html>
 <head>
     <title>MTG Token & Card Finder</title>
+    <!-- Crucial Meta Tag for Mobile Optimization -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body { 
             font-family: Arial, sans-serif; 
             background-color: #222; 
             color: #fff; 
             text-align: center; 
-            padding: 20px; 
+            padding: 15px; 
+            margin: 0;
         }
         button { 
-            padding: 10px 15px; 
+            padding: 12px 15px; /* Larger padding for better touch targets */
             margin: 5px; 
-            font-size: 14px; 
+            font-size: 15px; 
             cursor: pointer; 
             background-color: #5A2D82;
             color: white;
             border: none;
             border-radius: 5px;
+            font-weight: bold;
         }
         button:hover { background-color: #733ba6; }
         
@@ -32,8 +36,8 @@
             flex-wrap: wrap;
         }
         select#searchMode {
-            padding: 11px;
-            font-size: 15px;
+            padding: 13px;
+            font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
             background-color: #333;
@@ -41,36 +45,41 @@
             cursor: pointer;
         }
         input[type="text"] {
-            padding: 12px;
-            font-size: 16px;
+            padding: 13px;
+            font-size: 16px; /* 16px prevents iOS from auto-zooming */
             border-radius: 5px;
             border: 1px solid #ccc;
-            width: 50%;
-            max-width: 300px;
+            flex-grow: 1;
+            min-width: 200px;
+            max-width: 400px;
             margin: 0;
+            box-sizing: border-box;
         }
 
         #status { 
             margin: 20px 0; 
             font-style: italic; 
             color: #ccc;
+            font-size: 14px;
         }
         .error { color: #ff5555 !important; font-weight: bold; }
         
         /* Main selected image */
         #resultArea img { 
-            max-width: 300px; 
-            border-radius: 12px; 
+            width: 100%;
+            max-width: 350px; 
+            border-radius: 14px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.8);
         }
         
         .controls-box {
             background: #111;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             max-width: 800px;
             margin: 0 auto;
             position: relative; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
         /* --- HEADER LINKS & DONATION BUTTON --- */
@@ -92,7 +101,7 @@
             background-color: #008CFF;
             color: white;
             text-decoration: none;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 5px;
             font-size: 14px;
             font-weight: bold;
@@ -107,13 +116,13 @@
             right: 20px;
             background: #2a2a2a;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 8px;
             flex-direction: column;
             align-items: flex-start;
             gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.9);
             z-index: 100;
-            border: 1px solid #444;
+            border: 1px solid #555;
             text-align: left;
             width: max-content;
             max-width: 300px;
@@ -127,23 +136,26 @@
             align-items: flex-start;
             gap: 8px;
             line-height: 1.4;
+            width: 100%;
         }
         .options-container select {
             margin-top: 5px;
-            padding: 6px;
+            padding: 8px;
             width: 100%;
             background: #444;
             color: white;
             border: 1px solid #666;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 14px;
         }
 
         /* --- SEARCH FILTERS --- */
         .filter-group {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
             margin-bottom: 20px;
             font-size: 15px;
         }
@@ -152,9 +164,10 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            padding: 5px;
         }
 
-        /* --- QUICK BUTTON THUMBNAILS (3x3 Grid) --- */
+        /* --- QUICK BUTTON THUMBNAILS --- */
         .quick-button-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -172,31 +185,30 @@
             align-items: center;
             gap: 8px;
             color: #ccc;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             transition: transform 0.2s ease, color 0.2s ease;
         }
         .thumbnail-btn img {
             width: 100%;
-            max-width: 120px;
+            max-width: 140px;
             aspect-ratio: 2.5 / 3.5; 
             background-color: #333; 
             border-radius: 8px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.6);
-            transition: box-shadow 0.2s ease, border 0.2s ease;
             border: 2px solid transparent;
             object-fit: cover;
         }
-        .thumbnail-btn:hover {
-            transform: scale(1.08);
-            color: #fff;
-        }
-        .thumbnail-btn:hover img {
-            box-shadow: 0 6px 12px rgba(216, 27, 96, 0.8);
-            border: 2px solid #d81b60;
+        .thumbnail-btn:active {
+            transform: scale(0.95);
         }
         
-        .action-row { margin-top: 20px; }
+        .action-row { 
+            margin-top: 20px; 
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
 
         /* --- RESULTS GALLERY GRID --- */
         .results-grid {
@@ -208,16 +220,58 @@
             max-width: 900px;
         }
         .results-grid img {
-            width: 140px;
+            width: 45%;
+            max-width: 150px;
             border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
-        .results-grid img:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 12px rgba(0, 140, 255, 0.8);
-            border: 2px solid #008CFF;
+
+        /* =========================================
+           MOBILE SPECIFIC MEDIA QUERIES (PHONES & TABLETS)
+           ========================================= */
+        @media (max-width: 600px) {
+            .controls-box {
+                padding: 15px;
+            }
+            .search-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-container > * {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 5px;
+            }
+            #searchBtn {
+                padding: 15px;
+            }
+            /* Switch Quick Tokens to 2 columns on small phones */
+            .quick-button-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            /* Stack Action buttons vertically and make them wide */
+            .action-row {
+                flex-direction: column;
+            }
+            .action-row button {
+                width: 100%;
+                margin: 0;
+                padding: 15px;
+            }
+            /* Center the settings menu on mobile */
+            .options-container {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                bottom: auto;
+                right: auto;
+                width: 90%;
+                max-width: 400px;
+                z-index: 1000;
+            }
         }
 
         /* --- EXACT 576px PRINT STYLES --- */
@@ -310,7 +364,7 @@
                 <option value="type">Type</option>
             </select>
             <input type="text" id="searchInput" placeholder="e.g., Black Lotus, Goblin...">
-            <button id="searchBtn" style="background-color: #d81b60; margin: 0;">Search</button>
+            <button id="searchBtn" style="background-color: #d81b60;">Search</button>
         </div>
 
         <!-- Checkbox Filters -->
@@ -370,7 +424,7 @@
     <h3 id="status">Ready. Search for a card or click a button.</h3>
     
     <div id="backButtonContainer" style="display: none; margin: 15px 0;">
-        <button id="backToResultsBtn" style="background-color: #444; font-weight: bold; padding: 12px 20px;">← Back to Results</button>
+        <button id="backToResultsBtn" style="background-color: #444; font-weight: bold; padding: 15px 20px; width: 100%; max-width: 400px;">← Back to Results</button>
     </div>
 
     <div id="resultsGrid" class="results-grid"></div>
@@ -444,10 +498,7 @@
                 const sortOrder = document.getElementById('sortToggle').value;
                 const maxResultsLimit = document.getElementById('maxResultsToggle').value;
                 
-                // Construct optimized URL
                 let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
-                
-                // Add the sort order instruction
                 url += `&order=released&dir=${sortOrder}`;
 
                 const cleanKeyword = baseQuery.replace(/[a-zA-Z\-]+[=:][^\s]+/g, '').replace(/[!"]/g, '').trim().toLowerCase();
@@ -476,7 +527,6 @@
                     }
                 };
 
-                // Track and enforce user-selected limit
                 let renderedCount = 0;
 
                 // Smart Face/Card Rendering for DFCs & Backsides
