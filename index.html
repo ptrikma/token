@@ -14,7 +14,7 @@
             margin: 0;
         }
         button { 
-            padding: 12px 15px; /* Larger padding for better touch targets */
+            padding: 12px 15px; 
             margin: 5px; 
             font-size: 15px; 
             cursor: pointer; 
@@ -46,7 +46,7 @@
         }
         input[type="text"] {
             padding: 13px;
-            font-size: 16px; /* 16px prevents iOS from auto-zooming */
+            font-size: 16px; 
             border-radius: 5px;
             border: 1px solid #ccc;
             flex-grow: 1;
@@ -246,12 +246,10 @@
             #searchBtn {
                 padding: 15px;
             }
-            /* Switch Quick Tokens to 2 columns on small phones */
             .quick-button-container {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
-            /* Stack Action buttons vertically and make them wide */
             .action-row {
                 flex-direction: column;
             }
@@ -260,7 +258,6 @@
                 margin: 0;
                 padding: 15px;
             }
-            /* Move options container up slightly since buttons are stacked */
             .options-container {
                 bottom: 140px;
             }
@@ -460,11 +457,6 @@
             resultsGrid.style.display = "flex";
             backContainer.style.display = "none";
 
-            // Smoothly auto-scroll down to the results area on mobile
-            if (window.innerWidth <= 600) {
-                statusText.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-
             try {
                 let typeFilters = [];
                 
@@ -498,13 +490,19 @@
                 let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
                 url += `&order=released&dir=${sortOrder}`;
 
-                const cleanKeyword = baseQuery.replace(/[a-zA-Z\-]+[=:][^\s]+/g, '').replace(/[!"]/g, '').trim().toLowerCase();
+                // Upgraded cleanup strictly ignores syntax tags so we don't break the Face-matcher
+                const cleanKeyword = baseQuery
+                    .replace(/name:/gi, '')
+                    .replace(/t:/gi, '')
+                    .replace(/[a-zA-Z\-]+[=:][^\s"]+/g, '')
+                    .replace(/[!"]/g, '')
+                    .trim().toLowerCase();
                 
                 const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.object === 'error' || data.total_cards === 0) {
-                    statusText.innerText = "No results found. Try adjusting your search or filters.";
+                    statusText.innerText = "No results found. Try adjusting your search or spelling.";
                     statusText.className = "error";
                     return;
                 }
@@ -515,6 +513,8 @@
                         img.src = thumbUrl;
                         img.alt = faceName;
                         img.title = faceName;
+                        img.dataset.highres = highResUrl;
+                        img.dataset.name = faceName;
                         
                         img.onclick = () => {
                             selectMainCard(highResUrl, faceName);
@@ -592,6 +592,10 @@
                 savedStatusMessage = `Showing ${renderedCount} results. Click one to select it!`;
                 statusText.innerText = savedStatusMessage;
 
+                setTimeout(() => {
+                    statusText.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+
             } catch (error) {
                 statusText.innerText = "System Error: " + error.message;
                 statusText.className = "error";
@@ -599,7 +603,7 @@
         }
 
         // --- Render Main Selection ---
-        function selectMainCard(imgUrl, cardName) {
+        function selectMainCard(imgUrl, cardName, forcePrint = false) {
             const statusText = document.getElementById('status');
             const resultArea = document.getElementById('resultArea');
             const resultsGrid = document.getElementById('resultsGrid');
@@ -615,26 +619,36 @@
             imgElement.alt = cardName;
 
             imgElement.onload = function() {
+                setTimeout(() => {
+                    statusText.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 50);
+
                 const isAutoPrint = document.getElementById('autoPrintToggle').checked;
-                if (isAutoPrint) {
+                if (isAutoPrint || forcePrint) {
                     setTimeout(function() {
                         window.print();
-                    }, 100);
+                    }, 200);
                 }
             };
 
             resultArea.appendChild(imgElement);
         }
 
-        // --- Manual Search Handler (Name vs Type) ---
+        // --- Manual Search Handler with Smart Strict Mode ---
         function processManualSearch() {
             let query = document.getElementById('searchInput').value.trim();
             if (!query) return;
 
             const mode = document.getElementById('searchMode').value;
             
-            if (mode === 'type') {
-                query = `t:"${query}"`; 
+            // If the user types a normal word/phrase without advanced Scryfall syntax, wrap it strictly
+            if (!query.includes(':') && !query.includes('=') && !query.includes('"')) {
+                if (mode === 'name') {
+                    // This forces Scryfall to ONLY search the title of the card, ignoring Oracle text.
+                    query = `name:"${query}"`; 
+                } else if (mode === 'type') {
+                    query = `t:"${query}"`; 
+                }
             }
             
             fetchCards(query);
@@ -668,10 +682,33 @@
             document.getElementById('backButtonContainer').style.display = "none";
             document.getElementById('resultArea').innerHTML = "";
             document.getElementById('status').innerText = savedStatusMessage;
+            
+            setTimeout(() => {
+                document.getElementById('status').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
         });
 
         document.getElementById('printBtn').addEventListener('click', function() {
-            window.print();
+            const selectedImg = document.querySelector('#resultArea img');
+            
+            if (selectedImg) {
+                window.print();
+            } else {
+                const firstResultImg = document.querySelector('#resultsGrid img');
+                
+                if (firstResultImg) {
+                    const highRes = firstResultImg.dataset.highres;
+                    const name = firstResultImg.dataset.name;
+                    selectMainCard(highRes, name, true); 
+                } else {
+                    const statusText = document.getElementById('status');
+                    statusText.innerText = "Nothing to print! Please search or choose a token first.";
+                    statusText.className = "error";
+                    setTimeout(() => {
+                        statusText.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 50);
+                }
+            }
         });
     </script>
 </body>
