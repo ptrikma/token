@@ -279,7 +279,7 @@
                 width: 100%;
             }
             .search-buttons {
-                width: 100%; /* Keep Search and Clear side-by-side on mobile, but full width */
+                width: 100%; 
             }
             .quick-button-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -446,6 +446,23 @@
             </button>
         </div>
 
+        <!-- NEW MECHANICS & DUNGEONS SECTION -->
+        <h3 style="font-size: 16px; margin-bottom: 10px; margin-top: 30px;">Mechanics & Dungeons</h3>
+        <div class="quick-button-container">
+            <button class="thumbnail-btn quick-btn" data-query='!"The Initiative"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/2/c/2c65185b-6cf0-451d-985e-56aa45d9a57d.jpg" alt="The Initiative">
+                <span>The Initiative</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"The Monarch"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/4/0/40b79918-22a7-4fff-82a6-8ebfe6e87185.jpg" alt="The Monarch">
+                <span>The Monarch</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='t:dungeon'>
+                <img src="https://cards.scryfall.io/normal/front/5/9/59a1ad26-4ee5-4b36-bafb-1a5113d07f35.jpg" alt="Dungeons">
+                <span>All Dungeons</span>
+            </button>
+        </div>
+
         <div class="action-row">
             <button id="printBtn" style="background-color: #2e7d32;">Print Selected Image</button>
             <button id="hamburgerBtn" style="background-color: #444;" title="Settings">☰ Settings</button>
@@ -522,7 +539,8 @@
                 
                 const excludeArt = document.getElementById('excludeArtToggle').checked;
                 if (excludeArt) {
-                    finalQuery += " -layout:art_series -layout:ad -is:artseries -is:memorabilia -t:card";
+                    // Removed -t:card to ensure Helper Cards (like The Initiative) are not blocked!
+                    finalQuery += " -layout:art_series -layout:ad -is:artseries -is:memorabilia";
                 }
 
                 const duplicateFilter = overrideDuplicate || document.getElementById('duplicateToggle').value;
@@ -569,7 +587,7 @@
 
                     if (excludeArt) {
                         const ctl = (card.type_line || "").toLowerCase();
-                        if (ctl === "card" || ctl === "ad" || ctl.includes("art series")) continue;
+                        if (ctl === "ad" || ctl.includes("art series")) continue;
                     }
 
                     if (card.image_uris && card.image_uris.small) {
@@ -584,7 +602,7 @@
                             
                             if (excludeArt) {
                                 const ftl = (face.type_line || "").toLowerCase().trim();
-                                if (ftl === "card" || ftl === "ad" || ftl.includes("art series") || ftl === "") return;
+                                if (ftl === "ad" || ftl.includes("art series") || ftl === "") return;
                             }
                             
                             if (cleanKeyword !== "") {
@@ -612,7 +630,7 @@
                                 if (!f.image_uris || !f.image_uris.small) return false;
                                 if (excludeArt) {
                                     const ftl = (f.type_line || "").toLowerCase().trim();
-                                    if (ftl === "card" || ftl === "ad" || ftl.includes("art series") || ftl === "") return false;
+                                    if (ftl === "ad" || ftl.includes("art series") || ftl === "") return false;
                                 }
                                 return true;
                             });
