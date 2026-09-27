@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>MTG Token & Card Finder</title>
-    <!-- Crucial Meta Tag for Mobile Optimization -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body { 
@@ -26,55 +25,34 @@
         }
         button:hover { background-color: #733ba6; }
         
-        /* --- SEARCH BAR STYLES (3 BOXES & BUTTONS) --- */
+        /* --- SEARCH BAR STYLES --- */
         .search-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .search-inputs {
-            display: flex;
-            gap: 10px;
-            width: 100%;
             justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
-        .search-inputs input {
-            flex: 1;
+        select#searchMode {
             padding: 13px;
-            font-size: 16px; /* Prevents iOS auto-zooming */
+            font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
-            box-sizing: border-box;
-            background-color: #fff;
-            color: #000;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
         }
-        .search-buttons {
-            display: flex;
-            gap: 10px;
-            width: 50%;
-            min-width: 250px;
-            justify-content: center;
-        }
-        .search-buttons button {
-            flex: 1;
+        input[type="text"] {
+            padding: 13px;
+            font-size: 16px; 
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            flex-grow: 1;
+            min-width: 200px;
+            max-width: 400px;
             margin: 0;
-            padding: 15px;
-            font-size: 16px;
-        }
-        #searchBtn {
-            background-color: #d81b60;
-        }
-        #searchBtn:hover {
-            background-color: #e91e63;
-        }
-        #clearBtn {
-            background-color: #555;
-        }
-        #clearBtn:hover {
-            background-color: #777;
+            box-sizing: border-box;
         }
 
         #status { 
@@ -86,23 +64,11 @@
         .error { color: #ff5555 !important; font-weight: bold; }
         
         /* Main selected image */
-        .main-card-img { 
+        #resultArea img { 
             width: 100%;
             max-width: 350px; 
             border-radius: 14px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-            margin-bottom: 20px;
-        }
-
-        /* --- RELATED TOKENS SECTION --- */
-        .related-tokens-section {
-            margin-top: 30px;
-            border-top: 1px solid #444;
-            padding-top: 20px;
-            width: 100%;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
         }
         
         .controls-box {
@@ -258,47 +224,33 @@
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-            transition: transform 0.2s ease;
-        }
-        .results-grid img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 140, 255, 0.8);
         }
 
-        /* =========================================
-           MOBILE SPECIFIC MEDIA QUERIES
-           ========================================= */
         @media (max-width: 600px) {
-            .controls-box {
-                padding: 15px;
-            }
-            .search-inputs {
+            .controls-box { padding: 15px; }
+            .search-container {
                 flex-direction: column;
+                align-items: stretch;
             }
-            .search-inputs input {
+            .search-container > * {
                 width: 100%;
+                max-width: 100%;
+                margin-bottom: 5px;
             }
-            .search-buttons {
-                width: 100%; 
-            }
+            #searchBtn { padding: 15px; }
             .quick-button-container {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
-            .action-row {
-                flex-direction: column;
-            }
+            .action-row { flex-direction: column; }
             .action-row button {
                 width: 100%;
                 margin: 0;
                 padding: 15px;
             }
-            .options-container {
-                bottom: 140px;
-            }
+            .options-container { bottom: 140px; }
         }
 
-        /* --- EXACT 576px PRINT STYLES --- */
         @media print {
             @page { margin: 0; }
             body { 
@@ -311,16 +263,12 @@
             .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #backButtonContainer { 
                 display: none !important; 
             }
-            /* Hide the related tokens grid during print */
-            .related-tokens-section {
-                display: none !important;
-            }
             #resultArea {
                 width: 576px;
                 margin: 0;
                 padding: 0;
             }
-            #resultArea img.main-card-img { 
+            #resultArea img { 
                 box-shadow: none !important; 
                 border: none !important; 
                 width: 576px !important; 
@@ -343,7 +291,6 @@
     
     <div class="controls-box">
         
-        <!-- Options Menu Dropdown -->
         <div id="optionsMenu" class="options-container">
             <label>
                 <input type="checkbox" id="autoPrintToggle"> 
@@ -385,27 +332,21 @@
             </label>
         </div>
 
-        <!-- 3-BOX SEARCH AREA -->
         <div class="search-container">
-            <div class="search-inputs">
-                <input type="text" id="searchName" placeholder="Card Name (e.g. Goblin)">
-                <input type="text" id="searchType" placeholder="Type (e.g. Artifact)">
-                <input type="text" id="searchText" placeholder="Text (e.g. deathtouch)">
-            </div>
-            <div class="search-buttons">
-                <button id="searchBtn">Search</button>
-                <button id="clearBtn">Clear</button>
-            </div>
+            <select id="searchMode">
+                <option value="name">Name</option>
+                <option value="type">Type</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="e.g., Black Lotus, Goblin...">
+            <button id="searchBtn" style="background-color: #d81b60;">Search</button>
         </div>
 
-        <!-- Checkbox Filters -->
         <div class="filter-group">
             <label><input type="checkbox" id="checkCards" checked> Cards</label>
             <label><input type="checkbox" id="checkTokens" checked> Tokens</label>
             <label><input type="checkbox" id="checkEmblems" checked> Emblems</label>
         </div>
 
-        <!-- Quick Access Thumbnail Buttons -->
         <h3 style="font-size: 16px; margin-bottom: 10px;">Quick Tokens</h3>
         <div class="quick-button-container">
             <button class="thumbnail-btn quick-btn" data-query='!"Treasure"' data-force-token="true">
@@ -420,6 +361,18 @@
                 <img src="https://cards.scryfall.io/normal/front/2/6/261aed78-2d57-4ed4-b3d2-53b139b6bd44.jpg" alt="Food">
                 <span>Food</span>
             </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"The Initiative"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/2/c/2c7811bb-ef04-4e3a-92c2-8356f15cc7dc.jpg" alt="The Initiative">
+                <span>The Initiative</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='!"The Monarch"' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/4/0/40b79918-22a7-4fff-8246-8a3bbce8b4ce.jpg" alt="The Monarch">
+                <span>The Monarch</span>
+            </button>
+            <button class="thumbnail-btn quick-btn" data-query='t:dungeon' data-force-token="true">
+                <img src="https://cards.scryfall.io/normal/front/4/d/4df1bc55-e41c-43c3-ae3f-0ea03b41eeb0.jpg" alt="All Dungeons">
+                <span>All Dungeons</span>
+            </button>
             <button class="thumbnail-btn quick-btn" data-query='!"Zombie" c=b pow:2 tou:2 is:vanilla -o:decayed -o:lifelink -t:enchantment -t:artifact' data-force-token="true">
                 <img src="https://cards.scryfall.io/small/back/4/f/4f153ca0-0e55-4f3c-9780-570708844fd3.jpg" alt="2/2 Black Zombie">
                 <span>2/2 Black Zombie</span>
@@ -428,38 +381,9 @@
                 <img src="https://cards.scryfall.io/normal/front/8/6/86272c08-c5f2-413f-87ea-b135aca2d9c5.jpg" alt="1/1 White Soldier">
                 <span>1/1 White Soldier</span>
             </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Spirit" c=w pow:1 tou:1 o:flying -o:lifelink -o:defender -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/5/9/59e79ba0-33c8-46c8-8694-8bf854345fe7.jpg" alt="1/1 White Spirit">
-                <span>1/1 White Spirit</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Beast" c=g pow:3 tou:3 is:vanilla -o:trample -o:infect -o:toxic -o:hexproof -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/c/3/c3cbd01b-dbf5-424a-855d-f9a9d7e7e414.jpg" alt="3/3 Green Beast">
-                <span>3/3 Green Beast</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Angel" c=w pow:4 tou:4 o:flying o:vigilance -o:lifelink -o:haste -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/d/c/dc31e017-81e6-43bf-bf8e-ea0faca5d9b7.jpg" alt="4/4 White Angel">
-                <span>4/4 White Angel</span>
-            </button>
             <button class="thumbnail-btn quick-btn" data-query='!"Goblin" c=r pow:1 tou:1 is:vanilla -o:haste -o:defender -o:menace -t:enchantment -t:artifact' data-force-token="true">
                 <img src="https://cards.scryfall.io/normal/front/e/9/e9577d3c-ee19-4b53-adac-b304287a066f.jpg" alt="1/1 Red Goblin">
                 <span>1/1 Red Goblin</span>
-            </button>
-        </div>
-
-        <!-- NEW MECHANICS & DUNGEONS SECTION -->
-        <h3 style="font-size: 16px; margin-bottom: 10px; margin-top: 30px;">Mechanics & Dungeons</h3>
-        <div class="quick-button-container">
-            <button class="thumbnail-btn quick-btn" data-query='!"The Initiative"' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/2/c/2c65185b-6cf0-451d-985e-56aa45d9a57d.jpg" alt="The Initiative">
-                <span>The Initiative</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"The Monarch"' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/4/0/40b79918-22a7-4fff-82a6-8ebfe6e87185.jpg" alt="The Monarch">
-                <span>The Monarch</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='t:dungeon'>
-                <img src="https://cards.scryfall.io/normal/front/5/9/59a1ad26-4ee5-4b36-bafb-1a5113d07f35.jpg" alt="Dungeons">
-                <span>All Dungeons</span>
             </button>
         </div>
 
@@ -481,7 +405,6 @@
     <script>
         let savedStatusMessage = "";
 
-        // --- Settings Menu Logic ---
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const optionsMenu = document.getElementById('optionsMenu');
 
@@ -496,8 +419,7 @@
             }
         });
 
-        // --- Core Fetching Logic ---
-        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false, overrideDuplicate = null, overrideMax = null) {
+        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false) {
             const statusText = document.getElementById('status');
             const resultsGrid = document.getElementById('resultsGrid');
             const resultArea = document.getElementById('resultArea');
@@ -519,13 +441,14 @@
             try {
                 let typeFilters = [];
                 
+                // FIXED: Scryfall uses is:token for markers and t:dungeon for Dungeons
                 if (forceToken) {
-                    typeFilters.push("t:token");
+                    typeFilters.push("(is:token or t:dungeon)");
                 } else if (forceEmblem) {
                     typeFilters.push("t:emblem");
                 } else {
-                    if (document.getElementById('checkCards').checked) typeFilters.push("(-t:token -t:emblem)");
-                    if (document.getElementById('checkTokens').checked) typeFilters.push("t:token");
+                    if (document.getElementById('checkCards').checked) typeFilters.push("(-is:token -t:emblem -t:dungeon)");
+                    if (document.getElementById('checkTokens').checked) typeFilters.push("(is:token or t:dungeon)");
                     if (document.getElementById('checkEmblems').checked) typeFilters.push("t:emblem");
                 }
 
@@ -537,33 +460,36 @@
 
                 let finalQuery = `${baseQuery} (${typeFilters.join(" or ")})`;
                 
+                // FIXED: Removed the aggressive -t:card filter so Monarch/Initiative survive
                 const excludeArt = document.getElementById('excludeArtToggle').checked;
                 if (excludeArt) {
-                    // Removed -t:card to ensure Helper Cards (like The Initiative) are not blocked!
-                    finalQuery += " -layout:art_series -layout:ad -is:artseries -is:memorabilia";
+                    finalQuery += " -layout:art_series -layout:ad -is:memorabilia";
                 }
 
-                const duplicateFilter = overrideDuplicate || document.getElementById('duplicateToggle').value;
-                const maxResultsLimit = overrideMax || document.getElementById('maxResultsToggle').value;
+                const duplicateFilter = document.getElementById('duplicateToggle').value;
                 const sortOrder = document.getElementById('sortToggle').value;
+                const maxResultsLimit = document.getElementById('maxResultsToggle').value;
                 
                 let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
                 url += `&order=released&dir=${sortOrder}`;
 
-                const searchNameVal = document.getElementById('searchName').value.trim().toLowerCase();
-                const searchTypeVal = document.getElementById('searchType').value.trim().toLowerCase();
-                const cleanKeyword = (searchNameVal + " " + searchTypeVal).trim();
+                const cleanKeyword = baseQuery
+                    .replace(/name:/gi, '')
+                    .replace(/t:/gi, '')
+                    .replace(/[a-zA-Z\-]+[=:][^\s"]+/g, '')
+                    .replace(/[!"]/g, '')
+                    .trim().toLowerCase();
                 
                 const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.object === 'error' || data.total_cards === 0) {
-                    statusText.innerText = "No results found. Try adjusting your search or filters.";
+                    statusText.innerText = "No results found. Try adjusting your search or spelling.";
                     statusText.className = "error";
                     return;
                 }
 
-                const renderThumbnail = (thumbUrl, highResUrl, faceName, fullCardObj) => {
+                const renderThumbnail = (thumbUrl, highResUrl, faceName) => {
                     if (thumbUrl !== "") {
                         const img = document.createElement('img');
                         img.src = thumbUrl;
@@ -573,7 +499,7 @@
                         img.dataset.name = faceName;
                         
                         img.onclick = () => {
-                            selectMainCard(highResUrl, faceName, false, fullCardObj);
+                            selectMainCard(highResUrl, faceName);
                         };
                         
                         resultsGrid.appendChild(img);
@@ -585,13 +511,14 @@
                 for (const card of data.data) {
                     if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
 
+                    // FIXED: Re-tuned exclusion logic to only target raw ads and art series
                     if (excludeArt) {
                         const ctl = (card.type_line || "").toLowerCase();
                         if (ctl === "ad" || ctl.includes("art series")) continue;
                     }
 
                     if (card.image_uris && card.image_uris.small) {
-                        renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name, card);
+                        renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name);
                         renderedCount++;
                     } 
                     else if (card.card_faces) {
@@ -602,7 +529,7 @@
                             
                             if (excludeArt) {
                                 const ftl = (face.type_line || "").toLowerCase().trim();
-                                if (ftl === "ad" || ftl.includes("art series") || ftl === "") return;
+                                if (ftl === "ad" || ftl.includes("art series")) return;
                             }
                             
                             if (cleanKeyword !== "") {
@@ -612,7 +539,7 @@
                                     (face.oracle_text || "").toLowerCase()
                                 ].join(" ");
                                 
-                                if (faceText.includes(cleanKeyword) || cleanKeyword.includes(face.name.toLowerCase())) {
+                                if (faceText.includes(cleanKeyword)) {
                                     matchedFaces.push(face);
                                 } else {
                                     const words = cleanKeyword.split(" ");
@@ -630,7 +557,7 @@
                                 if (!f.image_uris || !f.image_uris.small) return false;
                                 if (excludeArt) {
                                     const ftl = (f.type_line || "").toLowerCase().trim();
-                                    if (ftl === "ad" || ftl.includes("art series") || ftl === "") return false;
+                                    if (ftl === "ad" || ftl.includes("art series")) return false;
                                 }
                                 return true;
                             });
@@ -638,7 +565,7 @@
 
                         for (const face of matchedFaces) {
                             if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
-                            renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name, card);
+                            renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name);
                             renderedCount++;
                         }
                     }
@@ -657,8 +584,7 @@
             }
         }
 
-        // --- Render Main Selection & Check For Related Tokens ---
-        function selectMainCard(imgUrl, cardName, forcePrint = false, cardObj = null) {
+        function selectMainCard(imgUrl, cardName, forcePrint = false) {
             const statusText = document.getElementById('status');
             const resultArea = document.getElementById('resultArea');
             const resultsGrid = document.getElementById('resultsGrid');
@@ -670,7 +596,6 @@
             statusText.innerText = "Selected: " + cardName;
 
             const imgElement = document.createElement('img');
-            imgElement.className = "main-card-img";
             imgElement.src = imgUrl;
             imgElement.alt = cardName;
 
@@ -688,139 +613,31 @@
             };
 
             resultArea.appendChild(imgElement);
-
-            // --- RELATED TOKENS LOGIC ---
-            if (cardObj && cardObj.all_parts && cardObj.all_parts.length > 0) {
-                const tokenParts = cardObj.all_parts.filter(p => p.component === 'token' || p.component === 'emblem');
-                
-                if (tokenParts.length > 0) {
-                    const tokensSection = document.createElement('div');
-                    tokensSection.className = 'related-tokens-section';
-                    
-                    const headerContainer = document.createElement('div');
-                    headerContainer.style.display = 'flex';
-                    headerContainer.style.justifyContent = 'center';
-                    headerContainer.style.alignItems = 'center';
-                    headerContainer.style.gap = '15px';
-                    headerContainer.style.marginBottom = '20px';
-                    headerContainer.style.flexWrap = 'wrap';
-
-                    const cardTypeLine = (cardObj.type_line || "").toLowerCase();
-                    const isAlreadyToken = cardTypeLine.includes('token') || cardTypeLine.includes('emblem');
-
-                    const tokensHeader = document.createElement('h4');
-                    tokensHeader.innerText = isAlreadyToken ? "Related Tokens:" : "Tokens created by this card:";
-                    tokensHeader.style.margin = '0';
-                    tokensHeader.style.color = '#aaa';
-                    
-                    const showAllBtn = document.createElement('button');
-                    showAllBtn.innerText = "Find All Printings";
-                    showAllBtn.style.padding = '8px 16px';
-                    showAllBtn.style.fontSize = '13px';
-                    showAllBtn.style.backgroundColor = '#008CFF';
-                    showAllBtn.style.margin = '0';
-                    showAllBtn.style.display = 'none'; 
-
-                    headerContainer.appendChild(tokensHeader);
-                    headerContainer.appendChild(showAllBtn);
-                    tokensSection.appendChild(headerContainer);
-                    
-                    const tokensGrid = document.createElement('div');
-                    tokensGrid.className = 'results-grid'; 
-                    tokensSection.appendChild(tokensGrid);
-                    
-                    resultArea.appendChild(tokensSection);
-                    
-                    Promise.all(tokenParts.map(p => fetch(p.uri).then(res => res.json())))
-                        .then(tokensData => {
-                            let oracleIds = [];
-                            let tokenNames = [];
-                            
-                            tokensData.forEach(tokenData => {
-                                if (tokenData.oracle_id) oracleIds.push(tokenData.oracle_id);
-                                if (tokenData.name) tokenNames.push(tokenData.name);
-                                
-                                const tImgSmall = tokenData.image_uris?.small || tokenData.card_faces?.[0].image_uris?.small;
-                                const tImgNormal = tokenData.image_uris?.normal || tokenData.card_faces?.[0].image_uris?.normal;
-                                
-                                if (tImgSmall) {
-                                    const tImg = document.createElement('img');
-                                    tImg.src = tImgSmall;
-                                    tImg.title = tokenData.name;
-                                    tImg.dataset.highres = tImgNormal;
-                                    tImg.dataset.name = tokenData.name;
-                                    
-                                    tImg.onclick = () => {
-                                        selectMainCard(tImgNormal, tokenData.name, false, tokenData);
-                                    };
-                                    
-                                    tokensGrid.appendChild(tImg);
-                                }
-                            });
-
-                            if (oracleIds.length > 0) {
-                                showAllBtn.style.display = 'inline-block';
-                                
-                                showAllBtn.onclick = () => {
-                                    document.getElementById('searchName').value = tokenNames.join(" or ");
-                                    document.getElementById('searchType').value = "";
-                                    document.getElementById('searchText').value = "";
-                                    
-                                    const exactQuery = oracleIds.map(id => `oracle_id:${id}`).join(" or ");
-                                    fetchCards(exactQuery, false, false, 'prints', 'all');
-                                };
-                            }
-                        })
-                        .catch(e => console.error("Could not fetch related token data", e));
-                }
-            }
         }
 
-        // --- Manual Search Handler ---
         function processManualSearch() {
-            let nameVal = document.getElementById('searchName').value.trim();
-            let typeVal = document.getElementById('searchType').value.trim();
-            let textVal = document.getElementById('searchText').value.trim();
+            let query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            const mode = document.getElementById('searchMode').value;
             
-            if (!nameVal && !typeVal && !textVal) return;
-
-            let queryParts = [];
-
-            if (nameVal) {
-                if (nameVal.includes(':') || nameVal.includes('=')) {
-                    queryParts.push(nameVal);
-                } else {
-                    queryParts.push(`name:"${nameVal}"`);
+            if (!query.includes(':') && !query.includes('=') && !query.includes('"')) {
+                if (mode === 'name') {
+                    query = `name:"${query}"`; 
+                } else if (mode === 'type') {
+                    query = `t:"${query}"`; 
                 }
             }
-            if (typeVal) {
-                queryParts.push(`t:"${typeVal}"`);
-            }
-            if (textVal) {
-                queryParts.push(`o:"${textVal}"`);
-            }
-
-            let finalQuery = queryParts.join(" ");
-            fetchCards(finalQuery);
+            
+            fetchCards(query);
         }
 
-        // --- Event Listeners ---
         document.getElementById('searchBtn').addEventListener('click', processManualSearch);
-        
-        // Clear Button logic
-        document.getElementById('clearBtn').addEventListener('click', function() {
-            document.getElementById('searchName').value = "";
-            document.getElementById('searchType').value = "";
-            document.getElementById('searchText').value = "";
-            document.getElementById('searchName').focus();
-        });
 
-        ['searchName', 'searchType', 'searchText'].forEach(id => {
-            document.getElementById(id).addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    processManualSearch();
-                }
-            });
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processManualSearch();
+            }
         });
 
         const quickBtns = document.querySelectorAll('.quick-btn');
@@ -831,9 +648,7 @@
                 const forceEmblem = this.getAttribute('data-force-emblem') === 'true';
                 
                 const cleanDisplay = query.match(/!"([^"]+)"/);
-                document.getElementById('searchName').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
-                document.getElementById('searchType').value = "";
-                document.getElementById('searchText').value = "";
+                document.getElementById('searchInput').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
                 
                 fetchCards(query, forceToken, forceEmblem);
             });
@@ -851,7 +666,7 @@
         });
 
         document.getElementById('printBtn').addEventListener('click', function() {
-            const selectedImg = document.querySelector('#resultArea img.main-card-img');
+            const selectedImg = document.querySelector('#resultArea img');
             
             if (selectedImg) {
                 window.print();
