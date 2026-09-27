@@ -26,7 +26,7 @@
         }
         button:hover { background-color: #733ba6; }
         
-        /* --- SEARCH BAR STYLES (3 BOXES & BUTTONS) --- */
+        /* --- SEARCH BAR STYLES --- */
         .search-container {
             display: flex;
             flex-direction: column;
@@ -44,7 +44,7 @@
         .search-inputs input {
             flex: 1;
             padding: 13px;
-            font-size: 16px; /* Prevents iOS auto-zooming */
+            font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
             box-sizing: border-box;
@@ -64,18 +64,10 @@
             padding: 15px;
             font-size: 16px;
         }
-        #searchBtn {
-            background-color: #d81b60;
-        }
-        #searchBtn:hover {
-            background-color: #e91e63;
-        }
-        #clearBtn {
-            background-color: #555;
-        }
-        #clearBtn:hover {
-            background-color: #777;
-        }
+        #searchBtn { background-color: #d81b60; }
+        #searchBtn:hover { background-color: #e91e63; }
+        #clearBtn { background-color: #555; }
+        #clearBtn:hover { background-color: #777; }
 
         #status { 
             margin: 20px 0; 
@@ -85,7 +77,6 @@
         }
         .error { color: #ff5555 !important; font-weight: bold; }
         
-        /* Main selected image */
         .main-card-img { 
             width: 100%;
             max-width: 350px; 
@@ -94,7 +85,6 @@
             margin-bottom: 20px;
         }
 
-        /* --- RELATED TOKENS SECTION --- */
         .related-tokens-section {
             margin-top: 30px;
             border-top: 1px solid #444;
@@ -115,7 +105,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
-        /* --- HEADER LINKS & DONATION BUTTON --- */
         .header-links {
             display: flex;
             justify-content: center;
@@ -123,21 +112,11 @@
             gap: 20px;
             margin-bottom: 20px;
         }
-        .rules-link {
-            color: #8ab4f8;
-            text-decoration: none;
-            font-size: 16px;
-        }
+        .rules-link { color: #8ab4f8; text-decoration: none; font-size: 16px; }
         .rules-link:hover { text-decoration: underline; }
-        
         .venmo-btn {
-            background-color: #008CFF;
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: bold;
+            background-color: #008CFF; color: white; text-decoration: none;
+            padding: 8px 16px; border-radius: 5px; font-size: 14px; font-weight: bold;
         }
         .venmo-btn:hover { background-color: #007bb5; }
 
@@ -145,190 +124,101 @@
         .options-container {
             display: none; 
             position: absolute;
-            bottom: 80px; 
-            right: 20px;
-            background: #2a2a2a;
-            padding: 15px;
-            border-radius: 8px;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.9);
-            z-index: 100;
-            border: 1px solid #555;
-            text-align: left;
-            width: max-content;
-            max-width: 300px;
+            bottom: 80px; right: 20px; background: #2a2a2a; padding: 15px;
+            border-radius: 8px; flex-direction: column; align-items: flex-start;
+            gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.9); z-index: 100;
+            border: 1px solid #555; text-align: left; width: max-content; max-width: 300px;
         }
         .options-container.show { display: flex; }
-        .options-container label {
-            cursor: pointer;
-            font-size: 14px;
-            color: #eee;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            line-height: 1.4;
-            width: 100%;
-        }
-        .options-container select {
-            margin-top: 5px;
-            padding: 8px;
-            width: 100%;
-            background: #444;
-            color: white;
-            border: 1px solid #666;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+        .options-container label { cursor: pointer; font-size: 14px; color: #eee; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; width: 100%; }
+        .options-container select { margin-top: 5px; padding: 8px; width: 100%; background: #444; color: white; border: 1px solid #666; border-radius: 4px; cursor: pointer; font-size: 14px; }
 
-        /* --- SEARCH FILTERS --- */
-        .filter-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
+        /* --- FILTERS --- */
+        .filter-group { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; font-size: 15px; }
+        .filter-group label { cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 5px; }
+
+        /* --- HORIZONTAL CAROUSEL FOR BUTTONS --- */
+        .carousel-wrapper {
+            width: 100%;
+            overflow: hidden;
             margin-bottom: 20px;
-            font-size: 15px;
         }
-        .filter-group label {
-            cursor: pointer;
+        .quick-button-container {
             display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 5px 0 15px 0;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            cursor: grab;
+        }
+        .quick-button-container::-webkit-scrollbar {
+            height: 8px; 
+            display: block; 
+        }
+        .quick-button-container::-webkit-scrollbar-track {
+            background: #222;
+            border-radius: 4px;
+        }
+        .quick-button-container::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        .quick-button-container::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+        .quick-button-container:active {
+            cursor: grabbing;
         }
 
-        /* --- QUICK BUTTON THUMBNAILS --- */
-        .quick-button-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            max-width: 500px;
-            margin: 0 auto 20px auto;
-        }
         .thumbnail-btn {
-            background: transparent;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: #ccc;
-            font-size: 13px;
-            font-weight: bold;
-            transition: transform 0.2s ease, color 0.2s ease;
+            background: transparent; border: none; padding: 0; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            color: #ccc; font-size: 12px; font-weight: bold; transition: transform 0.2s ease, color 0.2s ease;
+            flex: 0 0 100px; 
+            pointer-events: auto;
         }
         .thumbnail-btn img {
-            width: 100%;
-            max-width: 140px;
-            aspect-ratio: 2.5 / 3.5; 
-            background-color: #333; 
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.6);
-            border: 2px solid transparent;
-            object-fit: cover;
+            width: 100%; aspect-ratio: 2.5 / 3.5; 
+            background-color: #333; border-radius: 6px; box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+            border: 2px solid transparent; object-fit: cover;
+            pointer-events: none; 
         }
-        .thumbnail-btn:active {
-            transform: scale(0.95);
-        }
+        .thumbnail-btn:active { transform: scale(0.95); }
         
-        .action-row { 
-            margin-top: 20px; 
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+        .action-row { margin-top: 10px; display: flex; justify-content: center; gap: 10px; }
 
-        /* --- RESULTS GALLERY GRID --- */
+        /* --- RESULTS GALLERY --- */
         .results-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin: 20px auto;
-            max-width: 900px;
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 20px auto; max-width: 900px;
         }
         .results-grid img {
-            width: 45%;
-            max-width: 150px;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-            transition: transform 0.2s ease;
+            width: 45%; max-width: 150px; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.6); transition: transform 0.2s ease;
         }
-        .results-grid img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 140, 255, 0.8);
-        }
+        .results-grid img:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0, 140, 255, 0.8); }
 
         /* =========================================
            MOBILE SPECIFIC MEDIA QUERIES
            ========================================= */
         @media (max-width: 600px) {
-            .controls-box {
-                padding: 15px;
-            }
-            .search-inputs {
-                flex-direction: column;
-            }
-            .search-inputs input {
-                width: 100%;
-            }
-            .search-buttons {
-                width: 100%; 
-            }
-            .quick-button-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            .action-row {
-                flex-direction: column;
-            }
-            .action-row button {
-                width: 100%;
-                margin: 0;
-                padding: 15px;
-            }
-            .options-container {
-                bottom: 140px;
-            }
+            .controls-box { padding: 15px; }
+            .search-inputs { flex-direction: column; }
+            .search-inputs input { width: 100%; }
+            .search-buttons { width: 100%; }
+            .action-row { flex-direction: column; }
+            .action-row button { width: 100%; margin: 0; padding: 15px; }
+            .options-container { bottom: 140px; }
         }
 
-        /* --- EXACT 576px PRINT STYLES --- */
+        /* --- PRINT STYLES --- */
         @media print {
             @page { margin: 0; }
-            body { 
-                background-color: white; 
-                color: black; 
-                margin: 0;
-                padding: 0;
-                width: 576px; 
-            }
-            .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #backButtonContainer { 
-                display: none !important; 
-            }
-            /* Hide the related tokens grid during print */
-            .related-tokens-section {
-                display: none !important;
-            }
-            #resultArea {
-                width: 576px;
-                margin: 0;
-                padding: 0;
-            }
-            #resultArea img.main-card-img { 
-                box-shadow: none !important; 
-                border: none !important; 
-                width: 576px !important; 
-                max-width: 576px !important; 
-                height: auto !important; 
-                display: block;
-                margin: 0;
-            }
+            body { background-color: white; color: black; margin: 0; padding: 0; width: 576px; }
+            .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #backButtonContainer, .related-tokens-section { display: none !important; }
+            #resultArea { width: 576px; margin: 0; padding: 0; }
+            #resultArea img.main-card-img { box-shadow: none !important; border: none !important; width: 576px !important; max-width: 576px !important; height: auto !important; display: block; margin: 0; }
         }
     </style>
 </head>
@@ -405,62 +295,160 @@
             <label><input type="checkbox" id="checkEmblems" checked> Emblems</label>
         </div>
 
-        <!-- Quick Access Thumbnail Buttons -->
-        <h3 style="font-size: 16px; margin-bottom: 10px;">Quick Tokens</h3>
-        <div class="quick-button-container">
-            <button class="thumbnail-btn quick-btn" data-query='!"Treasure"' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/a/3/a3a684b7-27e0-4d9e-a064-9e03c6e50c89.jpg" alt="Treasure">
-                <span>Treasure</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Clue"' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/9/b/9b111525-0600-4bae-94a3-df8f9472388f.jpg" alt="Clue">
-                <span>Clue</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Food"' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/2/6/261aed78-2d57-4ed4-b3d2-53b139b6bd44.jpg" alt="Food">
-                <span>Food</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Zombie" c=b pow:2 tou:2 is:vanilla -o:decayed -o:lifelink -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/small/back/4/f/4f153ca0-0e55-4f3c-9780-570708844fd3.jpg" alt="2/2 Black Zombie">
-                <span>2/2 Black Zombie</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Soldier" c=w pow:1 tou:1 is:vanilla -o:lifelink -o:first -o:vigilance -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/8/6/86272c08-c5f2-413f-87ea-b135aca2d9c5.jpg" alt="1/1 White Soldier">
-                <span>1/1 White Soldier</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Spirit" c=w pow:1 tou:1 o:flying -o:lifelink -o:defender -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/5/9/59e79ba0-33c8-46c8-8694-8bf854345fe7.jpg" alt="1/1 White Spirit">
-                <span>1/1 White Spirit</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Beast" c=g pow:3 tou:3 is:vanilla -o:trample -o:infect -o:toxic -o:hexproof -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/c/3/c3cbd01b-dbf5-424a-855d-f9a9d7e7e414.jpg" alt="3/3 Green Beast">
-                <span>3/3 Green Beast</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Angel" c=w pow:4 tou:4 o:flying o:vigilance -o:lifelink -o:haste -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/d/c/dc31e017-81e6-43bf-bf8e-ea0faca5d9b7.jpg" alt="4/4 White Angel">
-                <span>4/4 White Angel</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"Goblin" c=r pow:1 tou:1 is:vanilla -o:haste -o:defender -o:menace -t:enchantment -t:artifact' data-force-token="true">
-                <img src="https://cards.scryfall.io/normal/front/e/9/e9577d3c-ee19-4b53-adac-b304287a066f.jpg" alt="1/1 Red Goblin">
-                <span>1/1 Red Goblin</span>
-            </button>
+        <!-- Quick Access Carousel -->
+        <h3 style="font-size: 16px; margin-bottom: 5px; text-align: left;">Quick Tokens <span style="font-size: 12px; color: #888; font-weight: normal;">(Swipe / Drag)</span></h3>
+        <div class="carousel-wrapper">
+            <div class="quick-button-container">
+                <button class="thumbnail-btn quick-btn" data-query='!"Treasure"' data-force-token="true" data-display="Treasure" data-exact-face="Treasure">
+                    <img src="https://cards.scryfall.io/normal/front/a/3/a3a684b7-27e0-4d9e-a064-9e03c6e50c89.jpg" alt="Treasure">
+                    <span>Treasure</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Clue"' data-force-token="true" data-display="Clue" data-exact-face="Clue">
+                    <img src="https://cards.scryfall.io/normal/front/9/b/9b111525-0600-4bae-94a3-df8f9472388f.jpg" alt="Clue">
+                    <span>Clue</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Food"' data-force-token="true" data-display="Food" data-exact-face="Food">
+                    <img src="https://cards.scryfall.io/normal/front/2/6/261aed78-2d57-4ed4-b3d2-53b139b6bd44.jpg" alt="Food">
+                    <span>Food</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Zombie" c=b pow:2 tou:2 is:vanilla -o:decayed -o:lifelink -t:enchantment -t:artifact' data-force-token="true" data-display="2/2 Black Zombie" data-exact-face="Zombie">
+                    <img src="https://cards.scryfall.io/normal/front/4/f/4f153ca0-0e55-4f3c-9780-570708844fd3.jpg" alt="2/2 Black Zombie">
+                    <span>2/2 Black Zombie</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Soldier" c=w pow:1 tou:1 is:vanilla -o:lifelink -o:first -o:vigilance -t:enchantment -t:artifact' data-force-token="true" data-display="1/1 White Soldier" data-exact-face="Soldier">
+                    <img src="https://cards.scryfall.io/normal/front/8/6/86272c08-c5f2-413f-87ea-b135aca2d9c5.jpg" alt="1/1 White Soldier">
+                    <span>1/1 White Soldier</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Spirit" c=w pow:1 tou:1 o:flying -o:lifelink -o:defender -t:enchantment -t:artifact' data-force-token="true" data-display="1/1 White Spirit" data-exact-face="Spirit">
+                    <img src="https://cards.scryfall.io/normal/front/5/9/59e79ba0-33c8-46c8-8694-8bf854345fe7.jpg" alt="1/1 White Spirit">
+                    <span>1/1 White Spirit</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Beast" c=g pow:3 tou:3 is:vanilla -o:trample -o:infect -o:toxic -o:hexproof -t:enchantment -t:artifact' data-force-token="true" data-display="3/3 Green Beast" data-exact-face="Beast">
+                    <img src="https://cards.scryfall.io/normal/front/c/3/c3cbd01b-dbf5-424a-855d-f9a9d7e7e414.jpg" alt="3/3 Green Beast">
+                    <span>3/3 Green Beast</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Angel" c=w pow:4 tou:4 o:flying o:vigilance -o:lifelink -o:haste -t:enchantment -t:artifact' data-force-token="true" data-display="4/4 White Angel" data-exact-face="Angel">
+                    <img src="https://cards.scryfall.io/normal/front/d/c/dc31e017-81e6-43bf-bf8e-ea0faca5d9b7.jpg" alt="4/4 White Angel">
+                    <span>4/4 White Angel</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Goblin" c=r pow:1 tou:1 is:vanilla -o:haste -o:defender -o:menace -t:enchantment -t:artifact' data-force-token="true" data-display="1/1 Red Goblin" data-exact-face="Goblin">
+                    <img src="https://cards.scryfall.io/normal/front/e/9/e9577d3c-ee19-4b53-adac-b304287a066f.jpg" alt="1/1 Red Goblin">
+                    <span>1/1 Red Goblin</span>
+                </button>
+            </div>
         </div>
 
-        <!-- MECHANICS & DUNGEONS SECTION -->
-        <h3 style="font-size: 16px; margin-bottom: 10px; margin-top: 30px;">Mechanics & Dungeons</h3>
-        <div class="quick-button-container">
-            <button class="thumbnail-btn quick-btn" data-query='!"The Initiative"' data-bypass-filters="true">
-                <img src="https://cards.scryfall.io/normal/front/2/c/2c65185b-6cf0-451d-985e-56aa45d9a57d.jpg" alt="The Initiative">
-                <span>The Initiative</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='!"The Monarch"' data-bypass-filters="true">
-                <img src="https://cards.scryfall.io/normal/front/4/0/40b79918-22a7-4fff-82a6-8ebfe6e87185.jpg" alt="The Monarch">
-                <span>The Monarch</span>
-            </button>
-            <button class="thumbnail-btn quick-btn" data-query='layout:dungeon' data-bypass-filters="true">
-                <img src="https://cards.scryfall.io/normal/front/5/9/59a1ad26-4ee5-4b36-bafb-1a5113d07f35.jpg" alt="All Dungeons">
-                <span>All Dungeons</span>
-            </button>
+        <!-- MECHANICS, HELPERS & TRACKERS CAROUSEL -->
+        <h3 style="font-size: 16px; margin-bottom: 5px; margin-top: 10px; text-align: left;">Mechanics, Helpers & Trackers <span style="font-size: 12px; color: #888; font-weight: normal;">(Swipe / Drag)</span></h3>
+        <div class="carousel-wrapper">
+            <div class="quick-button-container">
+                <!-- Mana Pool Tracker with Custom Hardcoded Thumbnail -->
+                <button class="thumbnail-btn quick-btn" data-query="custom:floating_mana" data-bypass-filters="true" data-display="Mana Pool">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDQgMTAzOSIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSIxMDM5Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTExIiByeD0iNDAiLz48cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSI2ODQiIGhlaWdodD0iOTc5IiBmaWxsPSIjMjIyIiByeD0iMjAiLz48cmVjdCB4PSI1MCIgeT0iNTAiIHdpZHRoPSI2NDQiIGhlaWdodD0iODAiIGZpbGw9IiMzMzMiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSI0IiByeD0iMTAiLz48dGV4dCB4PSIzNzIiIHk9IjEwNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiI+TUFOQSBQT09MPC90ZXh0PjxyZWN0IHg9IjUwIiB5PSIxNjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjZmRmYmY0IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iNCIgcng9IjE1Ii8+PGNpcmNsZSBjeD0iMjA1IiBjeT0iMjI1IiByPSI0NSIgZmlsbD0iI2ZkZmJmNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSIyMDUiIHk9IjI0MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMSI+Vw==</svg>" alt="Mana Pool">
+                    <span>Mana Pool</span>
+                </button>
+                
+                <button class="thumbnail-btn quick-btn" data-query="custom:speed" data-bypass-filters="true" data-display="Speed">
+                    <img src="https://cards.scryfall.io/normal/front/8/2/82613de6-ed37-48c1-8d2f-d91a3f496794.jpg?1783907681" alt="Speed">
+                    <span>Speed</span>
+                </button>
+
+                <!-- Renamed to Dungeons with correct Scryfall thumbnail -->
+                <button class="thumbnail-btn quick-btn" data-query="custom:dungeons" data-bypass-filters="true" data-display="Dungeons">
+                    <img src="https://cards.scryfall.io/normal/front/c/3/c3194aa3-a634-42ea-a7f8-71e4a5585093.jpg?1627709873" alt="Dungeons">
+                    <span>Dungeons</span>
+                </button>
+
+                <button class="thumbnail-btn quick-btn" data-query='(!&quot;The Initiative&quot; or !&quot;Undercity&quot;) include:extras' data-bypass-filters="true" data-display="The Initiative">
+                    <img src="https://api.scryfall.com/cards/tclb/20?format=image&version=small" alt="The Initiative">
+                    <span>The Initiative</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"The Monarch" include:extras' data-bypass-filters="true" data-display="The Monarch">
+                    <img src="https://api.scryfall.com/cards/tcn2/1?format=image&version=small" alt="The Monarch">
+                    <span>The Monarch</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"The Ring" include:extras' data-bypass-filters="true" data-display="The Ring">
+                    <img src="https://api.scryfall.com/cards/tltr/H13?format=image&version=small" alt="The Ring">
+                    <span>The Ring</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"City&#39;s Blessing" include:extras' data-bypass-filters="true" data-display="City's Blessing" data-exact-face="City's Blessing">
+                    <img src="https://api.scryfall.com/cards/trix/6?format=image&version=small" alt="City's Blessing">
+                    <span>City's Blessing</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Day // Night" include:extras' data-bypass-filters="true" data-display="Day // Night">
+                    <img src="https://api.scryfall.com/cards/tvow/21?format=image&version=small" alt="Day / Night">
+                    <span>Day / Night</span>
+                </button>
+
+                <button class="thumbnail-btn quick-btn" data-query='!"A Mysterious Creature" include:extras' data-bypass-filters="true" data-display="A Mysterious Creature">
+                    <img src="https://cards.scryfall.io/normal/front/c/7/c76a6163-6fd9-4cdf-9b14-07f75c2f0fa1.jpg?1783910885" alt="A Mysterious Creature">
+                    <span>A Mysterious Creature</span>
+                </button>
+                
+                <button class="thumbnail-btn quick-btn" data-query='!"Storm Counter" include:extras' data-bypass-filters="true" data-display="Storm Counter">
+                    <img src="https://cards.scryfall.io/normal/front/1/c/1c9fc622-bc1d-4be0-9f47-e753e18b4d78.jpg?1783903424" alt="Storm Counter">
+                    <span>Storm Counter</span>
+                </button>
+
+                <button class="thumbnail-btn quick-btn" data-query='(!"Ticket Bucket-Bot") include:extras' data-bypass-filters="true" data-display="Ticket Bucket-Bot">
+                    <img src="https://cards.scryfall.io/normal/front/5/2/52942a5c-0552-4a9b-9c0f-7a9ffd04d0af.jpg?1783920619" alt="Ticket Bucket-Bot">
+                    <span>Ticket Bucket-Bot</span>
+                </button>
+
+                <button class="thumbnail-btn quick-btn" data-query='!"Acorn Stash" include:extras' data-bypass-filters="true" data-display="Acorn Stash">
+                    <img src="https://api.scryfall.com/cards/tund/6?format=image&version=small" alt="Acorn Stash">
+                    <span>Acorn Stash</span>
+                </button>
+                <!-- Companion fixed with explicit front-face/token ID link -->
+                <button class="thumbnail-btn quick-btn" data-query='!"Companion" include:extras' data-bypass-filters="true" data-display="Companion">
+                    <img src="https://cards.scryfall.io/normal/front/6/b/6b95e8bd-2686-4790-afeb-9b17d482f156.jpg" alt="Companion">
+                    <span>Companion</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Cyberman" include:extras' data-bypass-filters="true" data-display="Cyberman">
+                    <img src="https://api.scryfall.com/cards/twho/24?format=image&version=small" alt="Cyberman">
+                    <span>Cyberman</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"On an Adventure" include:extras' data-bypass-filters="true" data-display="Enduring Story">
+                    <img src="https://api.scryfall.com/cards/twoe/18?format=image&version=small" alt="Enduring Story">
+                    <span>Enduring Story</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Energy Reserve" include:extras' data-bypass-filters="true" data-display="Energy Reserve">
+                    <img src="https://api.scryfall.com/cards/tpip/21?format=image&version=small" alt="Energy Reserve">
+                    <span>Energy Reserve</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Experience" include:extras' data-bypass-filters="true" data-display="Experience">
+                    <img src="https://api.scryfall.com/cards/tc15/1?format=image&version=small" alt="Experience">
+                    <span>Experience</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Foretell" include:extras' data-bypass-filters="true" data-display="Foretell">
+                    <img src="https://api.scryfall.com/cards/tkhm/23?format=image&version=small" alt="Foretell">
+                    <span>Foretell</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Manifest" include:extras' data-bypass-filters="true" data-display="Manifest">
+                    <img src="https://api.scryfall.com/cards/tfrf/4?format=image&version=small" alt="Manifest">
+                    <span>Manifest</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Morph" include:extras' data-bypass-filters="true" data-display="Morph">
+                    <img src="https://api.scryfall.com/cards/tktk/11?format=image&version=small" alt="Morph">
+                    <span>Morph</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"On an Adventure" include:extras' data-bypass-filters="true" data-display="On an Adventure">
+                    <img src="https://api.scryfall.com/cards/twoe/18?format=image&version=small" alt="On an Adventure">
+                    <span>On an Adventure</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Plot" include:extras' data-bypass-filters="true" data-display="Plot">
+                    <img src="https://api.scryfall.com/cards/totj/20?format=image&version=small" alt="Plot">
+                    <span>Plot</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='(!"Poison" or !"Poison Counter") include:extras' data-bypass-filters="true" data-display="Poison Counter">
+                    <img src="https://api.scryfall.com/cards/tnph/5?format=image&version=small" alt="Poison Counter">
+                    <span>Poison Counter</span>
+                </button>
+                <button class="thumbnail-btn quick-btn" data-query='!"Radiation" include:extras' data-bypass-filters="true" data-display="Radiation">
+                    <img src="https://api.scryfall.com/cards/tpip/22?format=image&version=small" alt="Radiation">
+                    <span>Radiation</span>
+                </button>
+            </div>
         </div>
 
         <div class="action-row">
@@ -480,6 +468,38 @@
 
     <script>
         let savedStatusMessage = "";
+        let isDragging = false; 
+
+        // --- PC Drag-to-Scroll Logic ---
+        document.querySelectorAll('.quick-button-container').forEach(slider => {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+                setTimeout(() => isDragging = false, 50);
+            });
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX);
+                
+                if (Math.abs(walk) > 5) {
+                    isDragging = true;
+                    e.preventDefault();
+                    slider.scrollLeft = scrollLeft - walk * 1.5;
+                }
+            });
+        });
 
         // --- Settings Menu Logic ---
         const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -497,7 +517,7 @@
         });
 
         // --- Core Fetching Logic ---
-        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false, overrideDuplicate = null, overrideMax = null, bypassFilters = false) {
+        async function fetchCards(baseQuery, forceToken = false, forceEmblem = false, overrideDuplicate = null, overrideMax = null, bypassFilters = false, exactFace = "") {
             const statusText = document.getElementById('status');
             const resultsGrid = document.getElementById('resultsGrid');
             const resultArea = document.getElementById('resultArea');
@@ -509,6 +529,128 @@
                 return;
             }
 
+            // --- CUSTOM DIRECT INTERCEPTS ---
+            
+            const renderThumbnailLocal = (thumbUrl, highResUrl, faceName, fullCardObj) => {
+                if (thumbUrl !== "") {
+                    const img = document.createElement('img');
+                    img.src = thumbUrl;
+                    img.alt = faceName;
+                    img.title = faceName;
+                    img.dataset.highres = highResUrl;
+                    img.dataset.name = faceName;
+                    img.onclick = () => { selectMainCard(highResUrl, faceName, false, fullCardObj); };
+                    resultsGrid.appendChild(img);
+                }
+            };
+            
+            // 1. Intercept for Speed URL
+            if (baseQuery === "custom:speed") {
+                resultsGrid.innerHTML = "";
+                resultsGrid.style.display = "none";
+                backContainer.style.display = "block";
+                
+                const speedUrl = "https://cards.scryfall.io/normal/front/8/2/82613de6-ed37-48c1-8d2f-d91a3f496794.jpg?1783907681";
+                selectMainCard(speedUrl, "Speed", false, null);
+                return;
+            }
+
+            // 2. Intercept for unified Mana Pool Tracker card
+            if (baseQuery === "custom:floating_mana") {
+                resultsGrid.innerHTML = "";
+                resultsGrid.style.display = "none";
+                backContainer.style.display = "block";
+                
+                const svgData = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 744 1039" width="744" height="1039">
+                    <rect width="100%" height="100%" fill="#111" rx="40"/>
+                    <rect x="30" y="30" width="684" height="979" fill="#222" rx="20"/>
+                    
+                    <rect x="50" y="50" width="644" height="80" fill="#333" stroke="#555" stroke-width="4" rx="10"/>
+                    <text x="372" y="105" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#fff">MANA POOL</text>
+
+                    <rect x="50" y="160" width="310" height="250" fill="#fdfbf4" stroke="#000" stroke-width="4" rx="15"/>
+                    <circle cx="205" cy="225" r="45" fill="#fdfbf4" stroke="#000" stroke-width="3"/>
+                    <text x="205" y="243" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#111">W</text>
+                    <rect x="115" y="285" width="180" height="100" fill="#fff" stroke="#000" stroke-width="3" stroke-dasharray="8,4" rx="10"/>
+                    
+                    <rect x="384" y="160" width="310" height="250" fill="#c1d8e9" stroke="#000" stroke-width="4" rx="15"/>
+                    <circle cx="539" cy="225" r="45" fill="#c1d8e9" stroke="#000" stroke-width="3"/>
+                    <text x="539" y="243" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#111">U</text>
+                    <rect x="449" y="285" width="180" height="100" fill="#fff" stroke="#000" stroke-width="3" stroke-dasharray="8,4" rx="10"/>
+
+                    <rect x="50" y="430" width="310" height="250" fill="#cbc2bf" stroke="#000" stroke-width="4" rx="15"/>
+                    <circle cx="205" cy="495" r="45" fill="#cbc2bf" stroke="#000" stroke-width="3"/>
+                    <text x="205" y="513" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#111">B</text>
+                    <rect x="115" y="555" width="180" height="100" fill="#fff" stroke="#000" stroke-width="3" stroke-dasharray="8,4" rx="10"/>
+
+                    <rect x="384" y="430" width="310" height="250" fill="#f1a88c" stroke="#000" stroke-width="4" rx="15"/>
+                    <circle cx="539" cy="495" r="45" fill="#f1a88c" stroke="#000" stroke-width="3"/>
+                    <text x="539" y="513" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#111">R</text>
+                    <rect x="449" y="555" width="180" height="100" fill="#fff" stroke="#000" stroke-width="3" stroke-dasharray="8,4" rx="10"/>
+
+                    <rect x="50" y="700" width="310" height="250" fill="#a8c5aa" stroke="#000" stroke-width="4" rx="15"/>
+                    <circle cx="205" cy="765" r="45" fill="#a8c5aa" stroke="#000" stroke-width="3"/>
+                    <text x="205" y="783" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#111">G</text>
+                    <rect x="115" y="825" width="180" height="100" fill="#fff" stroke="#000" stroke-width="3" stroke-dasharray="8,4" rx="10"/>
+
+                    <rect x="384" y="700" width="310" height="250" fill="#ccc2c0" stroke="#000" stroke-width="4" rx="15"/>
+                    <circle cx="539" cy="765" r="45" fill="#ccc2c0" stroke="#000" stroke-width="3"/>
+                    <text x="539" y="783" font-family="Arial, sans-serif" font-size="50" font-weight="bold" text-anchor="middle" fill="#111">C</text>
+                    <rect x="449" y="825" width="180" height="100" fill="#fff" stroke="#000" stroke-width="3" stroke-dasharray="8,4" rx="10"/>
+                </svg>`;
+                
+                const dataUrl = "data:image/svg+xml;base64," + btoa(svgData);
+                selectMainCard(dataUrl, "Mana Pool Tracker", false, null);
+                return;
+            }
+
+            // 3. Intercept for EXACT specific Dungeons
+            if (baseQuery === "custom:dungeons") {
+                statusText.innerText = "Loading Specific Dungeons...";
+                statusText.className = "";
+                resultsGrid.innerHTML = "";
+                resultArea.innerHTML = "";
+                resultsGrid.style.display = "flex";
+                backContainer.style.display = "none";
+                
+                const exactDungeons = [
+                    "Tomb of Annihilation",
+                    "Dungeon of the Mad Mage",
+                    "Lost Mine of Phandelver",
+                    "The Undercity",
+                    "Baldur's Gate Wilderness",
+                    "The Wilderness"
+                ];
+
+                let loadedCount = 0;
+                
+                for (const dName of exactDungeons) {
+                    try {
+                        let r = await fetch(`https://api.scryfall.com/cards/search?include_extras=true&q=${encodeURIComponent('!"' + dName + '"')}`);
+                        let dJson = await r.json();
+
+                        if (dJson.data && dJson.data.length > 0) {
+                            const card = dJson.data[0];
+                            if (card.card_faces) {
+                                let face = card.card_faces.find(f => f.name.toLowerCase() === dName.toLowerCase()) || card.card_faces[0];
+                                if (face.image_uris) {
+                                    renderThumbnailLocal(face.image_uris.small, face.image_uris.normal, face.name, card);
+                                    loadedCount++;
+                                }
+                            } else if (card.image_uris) {
+                                renderThumbnailLocal(card.image_uris.small, card.image_uris.normal, card.name, card);
+                                loadedCount++;
+                            }
+                        }
+                    } catch(e) { console.error("Error fetching dungeon: " + dName, e); }
+                }
+
+                savedStatusMessage = `Loaded ${loadedCount} specific Dungeons. Click one to select it!`;
+                statusText.innerText = savedStatusMessage;
+                return;
+            }
+            // --- END CUSTOM INTERCEPTS ---
+
             statusText.innerText = "Searching... (This takes longer if set to 'Every Printing')";
             statusText.className = "";
             resultsGrid.innerHTML = "";
@@ -519,7 +661,6 @@
             try {
                 let finalQuery = baseQuery;
 
-                // Only apply standard type filters if we aren't bypassing them for a special button
                 if (!bypassFilters) {
                     let typeFilters = [];
                     if (forceToken) {
@@ -541,7 +682,7 @@
                 }
                 
                 const excludeArt = document.getElementById('excludeArtToggle').checked;
-                if (excludeArt) {
+                if (excludeArt && !bypassFilters) {
                     finalQuery += " -layout:art_series -layout:ad -is:artseries -is:memorabilia";
                 }
 
@@ -552,9 +693,12 @@
                 let url = `https://api.scryfall.com/cards/search?include_extras=true&unique=${duplicateFilter}&q=${encodeURIComponent(finalQuery)}`;
                 url += `&order=released&dir=${sortOrder}`;
 
-                const searchNameVal = document.getElementById('searchName').value.trim().toLowerCase();
-                const searchTypeVal = document.getElementById('searchType').value.trim().toLowerCase();
-                const cleanKeyword = (searchNameVal + " " + searchTypeVal).replace(/[^\w\s]/gi, '').trim();
+                let cleanKeyword = "";
+                if (!bypassFilters) {
+                    const searchNameVal = document.getElementById('searchName').value.trim().toLowerCase();
+                    const searchTypeVal = document.getElementById('searchType').value.trim().toLowerCase();
+                    cleanKeyword = (searchNameVal + " " + searchTypeVal).replace(/[^\w\s]/gi, '').trim();
+                }
                 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -565,49 +709,28 @@
                     return;
                 }
 
-                const renderThumbnail = (thumbUrl, highResUrl, faceName, fullCardObj) => {
-                    if (thumbUrl !== "") {
-                        const img = document.createElement('img');
-                        img.src = thumbUrl;
-                        img.alt = faceName;
-                        img.title = faceName;
-                        img.dataset.highres = highResUrl;
-                        img.dataset.name = faceName;
-                        
-                        img.onclick = () => {
-                            selectMainCard(highResUrl, faceName, false, fullCardObj);
-                        };
-                        
-                        resultsGrid.appendChild(img);
-                    }
-                };
-
                 let renderedCount = 0;
 
                 for (const card of data.data) {
                     if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
 
-                    if (excludeArt) {
+                    if (excludeArt && !bypassFilters) {
                         const ctl = (card.type_line || "").toLowerCase();
                         if (ctl === "ad" || ctl.includes("art series")) continue;
                     }
 
                     if (card.image_uris && card.image_uris.small) {
-                        renderThumbnail(card.image_uris.small, card.image_uris.normal, card.name, card);
+                        renderThumbnailLocal(card.image_uris.small, card.image_uris.normal, card.name, card);
                         renderedCount++;
                     } 
                     else if (card.card_faces) {
                         let matchedFaces = [];
 
-                        card.card_faces.forEach(face => {
-                            if (!face.image_uris || !face.image_uris.small) return;
-                            
-                            if (excludeArt) {
-                                const ftl = (face.type_line || "").toLowerCase().trim();
-                                if (ftl === "ad" || ftl.includes("art series")) return;
-                            }
-                            
-                            if (cleanKeyword !== "" && !bypassFilters) {
+                        if (exactFace) {
+                            matchedFaces = card.card_faces.filter(f => f.name.toLowerCase() === exactFace.toLowerCase());
+                        } 
+                        else if (cleanKeyword !== "") {
+                            card.card_faces.forEach(face => {
                                 const faceText = [
                                     (face.name || "").toLowerCase(),
                                     (face.type_line || "").toLowerCase(),
@@ -622,25 +745,24 @@
                                         matchedFaces.push(face);
                                     }
                                 }
-                            } else {
-                                matchedFaces.push(face);
-                            }
-                        });
+                            });
+                        } 
+                        else {
+                            matchedFaces = card.card_faces;
+                        }
 
-                        if (matchedFaces.length === 0) {
-                            matchedFaces = card.card_faces.filter(f => {
-                                if (!f.image_uris || !f.image_uris.small) return false;
-                                if (excludeArt) {
-                                    const ftl = (f.type_line || "").toLowerCase().trim();
-                                    if (ftl === "ad" || ftl.includes("art series")) return false;
-                                }
-                                return true;
+                        if (excludeArt && !bypassFilters) {
+                            matchedFaces = matchedFaces.filter(f => {
+                                const ftl = (f.type_line || "").toLowerCase().trim();
+                                return ftl !== "ad" && !ftl.includes("art series");
                             });
                         }
+                        
+                        matchedFaces = matchedFaces.filter(f => f.image_uris && f.image_uris.small);
 
                         for (const face of matchedFaces) {
                             if (maxResultsLimit !== 'all' && renderedCount >= parseInt(maxResultsLimit)) break;
-                            renderThumbnail(face.image_uris.small, face.image_uris.normal, face.name, card);
+                            renderThumbnailLocal(face.image_uris.small, face.image_uris.normal, face.name, card);
                             renderedCount++;
                         }
                     }
@@ -692,9 +814,9 @@
             resultArea.appendChild(imgElement);
 
             if (cardObj && cardObj.all_parts && cardObj.all_parts.length > 0) {
-                const tokenParts = cardObj.all_parts.filter(p => p.component === 'token' || p.component === 'emblem');
+                const relatedParts = cardObj.all_parts.filter(p => p.id !== cardObj.id);
                 
-                if (tokenParts.length > 0) {
+                if (relatedParts.length > 0) {
                     const tokensSection = document.createElement('div');
                     tokensSection.className = 'related-tokens-section';
                     
@@ -706,11 +828,8 @@
                     headerContainer.style.marginBottom = '20px';
                     headerContainer.style.flexWrap = 'wrap';
 
-                    const cardTypeLine = (cardObj.type_line || "").toLowerCase();
-                    const isAlreadyToken = cardTypeLine.includes('token') || cardTypeLine.includes('emblem') || cardObj.layout === 'token';
-
                     const tokensHeader = document.createElement('h4');
-                    tokensHeader.innerText = isAlreadyToken ? "Related Tokens:" : "Tokens created by this card:";
+                    tokensHeader.innerText = "Related Cards & Tokens:";
                     tokensHeader.style.margin = '0';
                     tokensHeader.style.color = '#aaa';
                     
@@ -732,7 +851,7 @@
                     
                     resultArea.appendChild(tokensSection);
                     
-                    Promise.all(tokenParts.map(p => fetch(p.uri).then(res => res.json())))
+                    Promise.all(relatedParts.map(p => fetch(p.uri).then(res => res.json())))
                         .then(tokensData => {
                             let oracleIds = [];
                             let tokenNames = [];
@@ -825,18 +944,31 @@
 
         const quickBtns = document.querySelectorAll('.quick-btn');
         quickBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return; 
+                }
+
                 const query = this.getAttribute('data-query');
                 const forceToken = this.getAttribute('data-force-token') === 'true';
                 const forceEmblem = this.getAttribute('data-force-emblem') === 'true';
                 const bypassFilters = this.getAttribute('data-bypass-filters') === 'true';
+                const exactFace = this.getAttribute('data-exact-face') || "";
                 
-                const cleanDisplay = query.match(/!"([^"]+)"/);
-                document.getElementById('searchName').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
+                const displayTxt = this.getAttribute('data-display');
+                if (displayTxt) {
+                    document.getElementById('searchName').value = displayTxt;
+                } else {
+                    const cleanDisplay = query.match(/!"([^"]+)"/);
+                    document.getElementById('searchName').value = cleanDisplay ? cleanDisplay[1] : query.split(" ")[0];
+                }
+                
                 document.getElementById('searchType').value = "";
                 document.getElementById('searchText').value = "";
                 
-                fetchCards(query, forceToken, forceEmblem, null, null, bypassFilters);
+                fetchCards(query, forceToken, forceEmblem, null, null, bypassFilters, exactFace);
             });
         });
 
