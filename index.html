@@ -209,14 +209,14 @@
             .search-buttons { width: 100%; }
             .action-row { flex-direction: column; }
             .action-row button { width: 100%; margin: 0; padding: 15px; }
-            .options-container { bottom: 140px; }
+            .options-container { bottom: 80px; }
         }
 
         /* --- PRINT STYLES --- */
         @media print {
             @page { margin: 0; }
             body { background-color: white; color: black; margin: 0; padding: 0; width: 576px; }
-            .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #backButtonContainer, .related-tokens-section { display: none !important; }
+            .controls-box, h1, .header-links, #status, .options-container, #resultsGrid, #singleCardActions, #relatedTokensArea, .related-tokens-section { display: none !important; }
             #resultArea { width: 576px; margin: 0; padding: 0; }
             #resultArea img.main-card-img { box-shadow: none !important; border: none !important; width: 576px !important; max-width: 576px !important; height: auto !important; display: block; margin: 0; }
         }
@@ -342,12 +342,10 @@
         <h3 style="font-size: 16px; margin-bottom: 5px; margin-top: 10px; text-align: left;">Mechanics, Helpers & Trackers <span style="font-size: 12px; color: #888; font-weight: normal;">(Swipe / Drag)</span></h3>
         <div class="carousel-wrapper">
             <div class="quick-button-container">
-                <!-- Mana Pool Tracker with Custom Hardcoded Thumbnail -->
                 <button class="thumbnail-btn quick-btn" data-query="custom:floating_mana" data-bypass-filters="true" data-display="Mana Pool">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDQgMTAzOSIgd2lkdGg9Ijc0NCIgaGVpZ2h0PSIxMDM5Ij4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTExIiByeD0iNDAiLz4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSIzMCIgeT0iMzAiIHdpZHRoPSI2ODQiIGhlaWdodD0iOTc5IiBmaWxsPSIjMjIyIiByeD0iMjAiLz4KICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI1MCIgeT0iNTAiIHdpZHRoPSI2NDQiIGhlaWdodD0iODAiIGZpbGw9IiMzMzMiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSI0IiByeD0iMTAiLz4KICAgICAgICAgICAgICAgICAgICA8dGV4dCB4PSIzNzIiIHk9IjEwNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiI+TUFOQSBQT09MPC90ZXh0PgoKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI1MCIgeT0iMTYwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iI2ZkZmJmNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjQiIHJ4PSIxNSIvPgogICAgICAgICAgICAgICAgICAgIDxjaXJjbGUgY3g9IjIwNSIgY3k9IjIyNSIgcj0iNDUiIGZpbGw9IiNmZGZiZjQiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICAgICAgICAgICAgICAgICAgPHRleHQgeD0iMjA1IiB5PSIyNDMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxMTEiPlc8L3RleHQ+CiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMTE1IiB5PSIyODUiIHdpZHRoPSIxODAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZmZmIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iOCw0IiByeD0iMTAiLz4KICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSIzODQiIHk9IjE2MCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIyNTAiIGZpbGw9IiNjMWQ4ZTkiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSI0IiByeD0iMTUiLz4KICAgICAgICAgICAgICAgICAgICA8Y2lyY2xlIGN4PSI1MzkiIGN5PSIyMjUiIHI9IjQ1IiBmaWxsPSIjYzFkOGU5IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgICAgICAgICAgICAgICAgIDx0ZXh0IHg9IjUzOSIgeT0iMjQzIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTExIj5VPC90ZXh0PgogICAgICAgICAgICAgICAgICAgIDxyZWN0IHg9IjQ0OSIgeT0iMjg1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1kYXNoYXJyYXk9IjgsNCIgcng9IjEwIi8+CgogICAgICAgICAgICAgICAgICAgIDxyZWN0IHg9IjUwIiB5PSI0MzAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjY2JjMmJmIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iNCIgcng9IjE1Ii8+CiAgICAgICAgICAgICAgICAgICAgPGNpcmNsZSBjeD0iMjA1IiBjeT0iNDk1IiByPSI0NSIgZmlsbD0iI2NiYzJiZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgICAgICAgICAgICAgICAgICA8dGV4dCB4PSIyMDUiIHk9IjUxMyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMSI+QjwvdGV4dD4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSIxMTUiIHk9IjU1NSIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI4LDQiIHJ4PSIxMCIvPgoKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSIzODQiIHk9IjQzMCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIyNTAiIGZpbGw9IiNmMWE4OGMiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSI0IiByeD0iMTUiLz4KICAgICAgICAgICAgICAgICAgICA8Y2lyY2xlIGN4PSI1MzkiIGN5PSI0OTUiIHI9IjQ1IiBmaWxsPSIjZjFhODhjIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgICAgICAgICAgICAgICAgIDx0ZXh0IHg9IjUzOSIgeT0iNTEzIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTExIj5SPC90ZXh0PgogICAgICAgICAgICAgICAgICAgIDxyZWN0IHg9IjQ0OSIgeT0iNTU1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1kYXNoYXJyYXk9IjgsNCIgcng9IjEwIi8+CgogICAgICAgICAgICAgICAgICAgIDxyZWN0IHg9IjUwIiB5PSI3MDAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjYThjNWFhIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iNCIgcng9IjE1Ii8+CiAgICAgICAgICAgICAgICAgICAgPGNpcmNsZSBjeD0iMjA1IiBjeT0iNzY1IiByPSI0NSIgZmlsbD0iI2E4YzVhYSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgICAgICAgICAgICAgICAgICA8dGV4dCB4PSIyMDUiIHk9Ijc4MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMSI+RzwvdGV4dD4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSIxMTUiIHk9IjgyNSIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI4LDQiIHJ4PSIxMCIvPgoKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSIzODQiIHk9IjcwMCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIyNTAiIGZpbGw9IiNjY2MyYzAiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSI0IiByeD0iMTUiLz4KICAgICAgICAgICAgICAgICAgICA8Y2lyY2xlIGN4PSI1MzkiIGN5PSI3NjUiIHI9IjQ1IiBmaWxsPSIjY2NjMmMwIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgICAgICAgICAgICAgICAgIDx0ZXh0IHg9IjUzOSIgeT0iNzgzIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTExIj5DPC90ZXh0PgogICAgICAgICAgICAgICAgICAgIDxyZWN0IHg9IjQ0OSIgeT0iODI1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1kYXNoYXJyYXk9IjgsNCIgcng9IjEwIi8+CiAgICAgICAgICAgICAgICA8L3N2Zz4=" alt="Mana Pool">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NDQgMTAzOSI+CiAgICAgICAgICAgICAgICAgICAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzExMSIgcng9IjQwIi8+CiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMzAiIHk9IjMwIiB3aWR0aD0iNjg0IiBoZWlnaHQ9Ijk3OSIgZmlsbD0iIzIyMiIgcng9IjIwIi8+CiAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iNTAiIHk9IjUwIiB3aWR0aD0iNjQ0IiBoZWlnaHQ9IjgwIiBmaWxsPSIjMzMzIiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iNCIgcng9IjEwIi8+CiAgICAgICAgICAgICAgICAgICAgPHRleHQgeD0iMzcyIiB5PSIxMDUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNmZmYiPk1BTkEgUE9PTDwvdGV4dD4KCiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iNTAiIHk9IjE2MCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIyNTAiIGZpbGw9IiNmZGZiZjQiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSI0IiByeD0iMTUiLz4KICAgICAgICAgICAgICAgICAgICA8Y2lyY2xlIGN4PSIyMDUiIGN5PSIyMjUiIHI9IjQ1IiBmaWxsPSIjZmRmYmY0IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIvPgogICAgICAgICAgICAgICAgICAgIDx0ZXh0IHg9IjIwNSIgeT0iMjQzIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTExIj5XPC90ZXh0PgogICAgICAgICAgICAgICAgICAgIDxyZWN0IHg9IjExNSIgeT0iMjg1IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1kYXNoYXJyYXk9IjgsNCIgcng9IjEwIi8+CiAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMzg0IiB5PSIxNjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjYzFkOGU5IiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iNCIgcng9IjE1Ii8+CiAgICAgICAgICAgICAgICAgICAgPGNpcmNsZSBjeD0iNTM5IiBjeT0iMjI1IiByPSI0NSIgZmlsbD0iI2MxZDhlOSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgICAgICAgICAgICAgICAgICA8dGV4dCB4PSI1MzkiIHk9IjI0MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMSI+VTwvdGV4dD4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI0NDkiIHk9IjI4NSIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI4LDQiIHJ4PSIxMCIvPgoKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI1MCIgeT0iNDMwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iI2NiYzJiZiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjQiIHJ4PSIxNSIvPgogICAgICAgICAgICAgICAgICAgIDxjaXJjbGUgY3g9IjIwNSIgY3k9IjQ5NSIgcj0iNDUiIGZpbGw9IiNjYmMyYmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICAgICAgICAgICAgICAgICAgPHRleHQgeD0iMjA1IiB5PSI1MTMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxMTEiPkI8L3RleHQ+CiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMTE1IiB5PSI1NTUiIHdpZHRoPSIxODAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZmZmIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iOCw0IiByeD0iMTAiLz4KCiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMzg0IiB5PSI0MzAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjZjFhODhjIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iNCIgcng9IjE1Ii8+CiAgICAgICAgICAgICAgICAgICAgPGNpcmNsZSBjeD0iNTM5IiBjeT0iNDk1IiByPSI0NSIgZmlsbD0iI2YxYTg4YyIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgICAgICAgICAgICAgICAgICA8dGV4dCB4PSI1MzkiIHk9IjUxMyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMSI+UjwvdGV4dD4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI0NDkiIHk9IjU1NSIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmZmZiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI4LDQiIHJ4PSIxMCIvPgoKICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI1MCIgeT0iNzAwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iI2E4YzVhYSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjQiIHJ4PSIxNSIvPgogICAgICAgICAgICAgICAgICAgIDxjaXJjbGUgY3g9IjIwNSIgY3k9Ijc2NSIgcj0iNDUiIGZpbGw9IiNhOGM1YWEiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICAgICAgICAgICAgICAgICAgPHRleHQgeD0iMjA1IiB5PSI3ODMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxMTEiPkc8L3RleHQ+CiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMTE1IiB5PSI4MjUiIHdpZHRoPSIxODAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZmZmIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iOCw0IiByeD0iMTAiLz4KCiAgICAgICAgICAgICAgICAgICAgPHJlY3QgeD0iMzg0IiB5PSI3MDAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMjUwIiBmaWxsPSIjY2NjMmMwIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iNCIgcng9IjE1Ii8+CiAgICAgICAgICAgICAgICAgICAgPGNpcmNsZSBjeD0iNTM5IiBjeT0iNzY1IiByPSI0NSIgZmlsbD0iI2NjYzJjMCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgICAgICAgICAgICAgICAgICA8dGV4dCB4PSI1MzkiIHk9Ijc4MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjUwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzExMSI+QzwvdGV4dD4KICAgICAgICAgICAgICAgICAgICA8cmVjdCB4PSI0NDkiIHk9IjgyNSIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNmZmZiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI4LDQiIHJ4PSIxMCIvPgogICAgICAgICAgICAgICAgPC9zdmc+" alt="Mana Pool">
                     <span>Mana Pool</span>
                 </button>
-                <!-- Renamed to Dungeons with correct Scryfall thumbnail -->
                 <button class="thumbnail-btn quick-btn" data-query="custom:dungeons" data-bypass-filters="true" data-display="Dungeons">
                     <img src="https://cards.scryfall.io/normal/front/7/0/70b284bd-7a8f-4b60-8238-f746bdc5b236.jpg" alt="Dungeons">
                     <span>Dungeons</span>
@@ -360,9 +358,8 @@
                     <img src="https://api.scryfall.com/cards/tcn2/1?format=image&version=small" alt="The Monarch">
                     <span>The Monarch</span>
                 </button>
-                
-               <button class="thumbnail-btn quick-btn" data-query='!"Jace" include:extras' data-bypass-filters="true" data-display="Empower Jace">
-                    <img src="https://cards.scryfall.io/display/front/8/d/8d1e424f-6407-4f8c-bed2-eaf148237c81.webp?1789738324" alt="Empower Jace">
+                <button class="thumbnail-btn quick-btn" data-query='!"Jace" include:extras' data-bypass-filters="true" data-display="Empower Jace">
+                    <img src="https://cards.scryfall.io/normal/front/8/d/8d1e424f-6407-4f8c-bed2-eaf148237c81.jpg?1789738324" alt="Empower Jace">
                     <span>Empower Jace</span>
                 </button>
                 <button class="thumbnail-btn quick-btn" data-query='!"The Ring" include:extras' data-bypass-filters="true" data-display="The Ring">
@@ -381,16 +378,15 @@
                     <img src="https://cards.scryfall.io/normal/front/8/2/82613de6-ed37-48c1-8d2f-d91a3f496794.jpg?1783907681" alt="Speed">
                     <span>Speed</span>
                 </button>
-                 <button class="thumbnail-btn quick-btn" data-query='!"Storm Counter" include:extras' data-bypass-filters="true" data-display="Storm Counter">
+                <button class="thumbnail-btn quick-btn" data-query='!"Storm Counter" include:extras' data-bypass-filters="true" data-display="Storm Counter">
                     <img src="https://cards.scryfall.io/normal/front/1/c/1c9fc622-bc1d-4be0-9f47-e753e18b4d78.jpg?1783903424" alt="Storm Counter">
                     <span>Storm Counter</span>
                 </button>
-                 <!-- Companion fixed with explicit front-face/token ID link -->
                 <button class="thumbnail-btn quick-btn" data-query='!"Companion" include:extras' data-bypass-filters="true" data-display="Companion">
-                    <img src="https://cards.scryfall.io/normal/front/6/b/6b95e8bd-2686-4790-afeb-9b17d482f156.jpg" alt="Companion">
+                    <img src="https://cards.scryfall.io/normal/front/8/e/8ea242bb-a309-4786-90f7-5c490a613271.jpg" alt="Companion">
                     <span>Companion</span>
                 </button>
-               <button class="thumbnail-btn quick-btn" data-query='!"Enduring Story" include:extras' data-bypass-filters="true" data-display="Enduring Story">
+                <button class="thumbnail-btn quick-btn" data-query='!"Enduring Story" include:extras' data-bypass-filters="true" data-display="Enduring Story">
                     <img src="https://api.scryfall.com/cards/thob/14?format=image&version=small" alt="Enduring Story">
                     <span>Enduring Story</span>
                 </button>
@@ -406,7 +402,7 @@
                     <img src="https://api.scryfall.com/cards/tkhm/23?format=image&version=small" alt="Foretell">
                     <span>Foretell</span>
                 </button>
-                 <button class="thumbnail-btn quick-btn" data-query='!"On an Adventure" include:extras' data-bypass-filters="true" data-display="On an Adventure">
+                <button class="thumbnail-btn quick-btn" data-query='!"On an Adventure" include:extras' data-bypass-filters="true" data-display="On an Adventure">
                     <img src="https://api.scryfall.com/cards/twoe/18?format=image&version=small" alt="On an Adventure">
                     <span>On an Adventure</span>
                 </button>
@@ -442,7 +438,6 @@
                     <img src="https://cards.scryfall.io/normal/front/5/2/52942a5c-0552-4a9b-9c0f-7a9ffd04d0af.jpg?1783920619" alt="Ticket Bucket-Bot">
                     <span>Ticket Bucket-Bot</span>
                 </button>
-
                 <button class="thumbnail-btn quick-btn" data-query='!"Acorn Stash" include:extras' data-bypass-filters="true" data-display="Acorn Stash">
                     <img src="https://api.scryfall.com/cards/tund/6?format=image&version=small" alt="Acorn Stash">
                     <span>Acorn Stash</span>
@@ -451,19 +446,23 @@
         </div>
 
         <div class="action-row">
-            <button id="printBtn" style="background-color: #2e7d32;">Print Selected Image</button>
-            <button id="hamburgerBtn" style="background-color: #444;" title="Settings">☰ Settings</button>
+            <button id="hamburgerBtn" style="background-color: #444; width: 100%; max-width: 250px;" title="Settings">☰ Settings</button>
         </div>
     </div>
 
     <h3 id="status">Ready. Search for a card or click a button.</h3>
     
-    <div id="backButtonContainer" style="display: none; margin: 15px 0;">
-        <button id="backToResultsBtn" style="background-color: #444; font-weight: bold; padding: 15px 20px; width: 100%; max-width: 400px;">← Back to Results</button>
-    </div>
-
     <div id="resultsGrid" class="results-grid"></div>
     <div id="resultArea"></div>
+
+    <!-- ACTION BUTTONS MOVED HERE: Directly beneath the selected image -->
+    <div id="singleCardActions" style="display: none; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
+        <button id="printBtn" style="background-color: #2e7d32; font-weight: bold; padding: 15px 20px; width: 100%; max-width: 250px;">🖨️ Print Image</button>
+        <button id="backToResultsBtn" style="background-color: #444; font-weight: bold; padding: 15px 20px; width: 100%; max-width: 250px;">← Back to Results</button>
+    </div>
+
+    <!-- Related Tokens area moved below the action buttons -->
+    <div id="relatedTokensArea"></div>
 
     <script>
         let savedStatusMessage = "";
@@ -520,7 +519,8 @@
             const statusText = document.getElementById('status');
             const resultsGrid = document.getElementById('resultsGrid');
             const resultArea = document.getElementById('resultArea');
-            const backContainer = document.getElementById('backButtonContainer');
+            const actionContainer = document.getElementById('singleCardActions');
+            const relatedArea = document.getElementById('relatedTokensArea');
             
             if (!baseQuery.trim()) {
                 statusText.innerText = "Please enter a search term.";
@@ -543,22 +543,20 @@
                 }
             };
             
-            // 1. Intercept for Speed URL
             if (baseQuery === "custom:speed") {
                 resultsGrid.innerHTML = "";
                 resultsGrid.style.display = "none";
-                backContainer.style.display = "block";
+                actionContainer.style.display = "flex";
                 
                 const speedUrl = "https://cards.scryfall.io/normal/front/8/2/82613de6-ed37-48c1-8d2f-d91a3f496794.jpg?1783907681";
                 selectMainCard(speedUrl, "Speed", false, null);
                 return;
             }
 
-            // 2. Intercept for unified Mana Pool Tracker card
             if (baseQuery === "custom:floating_mana") {
                 resultsGrid.innerHTML = "";
                 resultsGrid.style.display = "none";
-                backContainer.style.display = "block";
+                actionContainer.style.display = "flex";
                 
                 const svgData = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 744 1039" width="744" height="1039">
                     <rect width="100%" height="100%" fill="#111" rx="40"/>
@@ -603,14 +601,14 @@
                 return;
             }
 
-            // 3. Intercept for EXACT specific Dungeons
             if (baseQuery === "custom:dungeons") {
                 statusText.innerText = "Loading Specific Dungeons...";
                 statusText.className = "";
                 resultsGrid.innerHTML = "";
                 resultArea.innerHTML = "";
+                relatedArea.innerHTML = "";
                 resultsGrid.style.display = "flex";
-                backContainer.style.display = "none";
+                actionContainer.style.display = "none";
                 
                 const exactDungeons = [
                     "Tomb of Annihilation",
@@ -653,8 +651,9 @@
             statusText.className = "";
             resultsGrid.innerHTML = "";
             resultArea.innerHTML = "";
+            relatedArea.innerHTML = "";
             resultsGrid.style.display = "flex";
-            backContainer.style.display = "none";
+            actionContainer.style.display = "none";
 
             try {
                 let finalQuery = baseQuery;
@@ -783,12 +782,14 @@
         function selectMainCard(imgUrl, cardName, forcePrint = false, cardObj = null) {
             const statusText = document.getElementById('status');
             const resultArea = document.getElementById('resultArea');
+            const relatedArea = document.getElementById('relatedTokensArea');
             const resultsGrid = document.getElementById('resultsGrid');
-            const backContainer = document.getElementById('backButtonContainer');
+            const actionContainer = document.getElementById('singleCardActions');
             
             resultsGrid.style.display = "none";
-            backContainer.style.display = "block";
+            actionContainer.style.display = "flex";
             resultArea.innerHTML = "";
+            relatedArea.innerHTML = "";
             statusText.innerText = "Selected: " + cardName;
 
             const imgElement = document.createElement('img');
@@ -847,7 +848,8 @@
                     tokensGrid.className = 'results-grid'; 
                     tokensSection.appendChild(tokensGrid);
                     
-                    resultArea.appendChild(tokensSection);
+                    // Append related tokens to the new dedicated area BELOW the action buttons
+                    relatedArea.appendChild(tokensSection);
                     
                     Promise.all(relatedParts.map(p => fetch(p.uri).then(res => res.json())))
                         .then(tokensData => {
@@ -972,8 +974,9 @@
 
         document.getElementById('backToResultsBtn').addEventListener('click', function() {
             document.getElementById('resultsGrid').style.display = "flex";
-            document.getElementById('backButtonContainer').style.display = "none";
+            document.getElementById('singleCardActions').style.display = "none";
             document.getElementById('resultArea').innerHTML = "";
+            document.getElementById('relatedTokensArea').innerHTML = "";
             document.getElementById('status').innerText = savedStatusMessage;
             
             setTimeout(() => {
@@ -982,26 +985,7 @@
         });
 
         document.getElementById('printBtn').addEventListener('click', function() {
-            const selectedImg = document.querySelector('#resultArea img.main-card-img');
-            
-            if (selectedImg) {
-                window.print();
-            } else {
-                const firstResultImg = document.querySelector('#resultsGrid img');
-                
-                if (firstResultImg) {
-                    const highRes = firstResultImg.dataset.highres;
-                    const name = firstResultImg.dataset.name;
-                    selectMainCard(highRes, name, true); 
-                } else {
-                    const statusText = document.getElementById('status');
-                    statusText.innerText = "Nothing to print! Please search or choose a token first.";
-                    statusText.className = "error";
-                    setTimeout(() => {
-                        statusText.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 50);
-                }
-            }
+            window.print();
         });
     </script>
 </body>
